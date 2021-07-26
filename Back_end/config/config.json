@@ -1,0 +1,11 @@
+{
+  "development": {
+    "username": "root",
+    "password": "Groupomania_OC_2021",
+    "database": "groupomania",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port":"3306"
+  }  
+}
+
