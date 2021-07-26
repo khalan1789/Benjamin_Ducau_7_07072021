@@ -1,16 +1,9 @@
 <template >
-    <header>
-        <div class="container d-flex justify-content-md-center">
-            <div class="row col col-lg-3 justify-content-md-center text-center  " >
-                <p class="text-center"><img src="../logos/icon-above-font.svg" alt="logo de groupomania" class="imglogo ml-5" style="width:300px height:80px"/></p>
-            </div>
-        </div>
-    </header>
-
+    <Header></Header>
     <main class="">
         <div class="container d-flex justify-content-md-center bg-primary col-lg-4 mb-5" >
             <div class="row justify-content-md-center col text-center">
-                <h2 class="mt-5 mb-4">Bienvenue sur le forum Groupomania</h2>
+                <h2 class="mt-5 mb-4">Bienvenue chez Groupomania</h2>
                 <form class="mt-2">
                     <div class="form-group col ">
                         <label for="email"  class=" mb-2 mt-2 h5">Email</label>
@@ -24,7 +17,7 @@
                 </form>
                 <div>
                     <h5 class="mt-3 mb-2">Pas encore inscrit ?</h5>
-                    <button type="submit" class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" >S'inscrire</button>
+                    <button type="submit" class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" ><router-link class="text-secondary bg-light text-decoration-none" to="/signin">S'inscrire</router-link></button>
                 </div>
             </div>
         </div>
@@ -32,6 +25,14 @@
 </template>
 
 <script>
+import Header from '../components/Header.vue'
+
+export default {
+  name: 'login',
+  components: {
+    Header
+  }
+}
 </script>
 
 <style lang="sass" scoped>
