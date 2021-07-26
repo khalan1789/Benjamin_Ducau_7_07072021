@@ -15,23 +15,23 @@ exports.signup = async (req, res) => {
         return res.status(400).json({ error: "Informations manquantes...." });
       };
 
-      db.User.findOne({ where: { email } })
-      .then(user =>{
-        if (user) {
-          return res.status(400).json({ error: "Utilisateur déjà existant..." });
-        }
-        else{
-          bcrypt.hash(password, 10, function( err, bcryptedPassword){
-          db.User.create({
-              firstname, lastname, email, password : bcryptedPassword, isAdmin : 0
-          })
-          .then(()=>  res.status(201).json({ message: "Utilisateur créé avec succès !" }))
-          })
-          .catch(error => res.status(488).json({error :"erreur dans le else du bcrypt"}))
-        }
-      })
-      .catch(error => res.status(499).json({error : "erreur dans le findOne"}));
+      //verification si l'utilisateur n'est pas déjà existant
+      let user = await db.User.findOne({ where: { lastname, firstname } })
 
+      if (user) {
+          return res.status(400).json({ error: "Utilisateur déjà existant..." });
+      }
+      else{
+          bcrypt.hash(password, 10)
+            .then(hash => {
+                db.User.create({
+                  firstname, lastname, email, password : hash
+                })
+                .then(()=>  res.status(201).json({ message: "Utilisateur créé avec succès !" }))
+                .catch(error => res.status(333).json({ message : "erreur dans le db create"}))
+              })
+            .catch(error => res.status(488).json({error :"erreur dans le catch du bcrypt"}))
+      }
   } catch (error) {
       return res.status(500).json({ error : "c'est dans le catch du try-catch" });
   }
@@ -47,9 +47,8 @@ exports.login = async (req, res) => {
 
       db.User.findOne({ where : { email }})
       .then(user => {
-        if(user){
-          if(user.password != password){
-            return res.status(401).json({error : "Mot de passe invalide"})
+          if(!user){
+              return res.status(401).json({error :  "Utilisateur non trouvé !"})
           }
           bcrypt.compare(password, user.password)
                     .then( valid => {
@@ -57,24 +56,17 @@ exports.login = async (req, res) => {
                             res.status(401).json({ error : " Mot de passe incorrect !" })
                         }
                         res.status(200).json({ 
-                            userId : user._id,
+                            userId : user.id,
                             token : jwt.sign(      
-                                {userId : user._id},
+                                {userId : user.id},
                                 'RANDOM_TOKEN_SECRET',
                                 {expiresIn : '24h'}
                             )
                         })
                     })
                     .catch(error => res.status(500).json({ error : "erreur du bcrypt" }))
-          
-        }else{
-          return res.status(401).json({error : "Utilisateur non trouvé !"})
-        }
-
       })
       .catch(error => res.status(500).json({ error : "erreur du findOne" }))
-      
-
   }
   catch (error){
     return res.status(500).json({ error : "c'est dans le catch du try-catch login" })
