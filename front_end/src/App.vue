@@ -1,8 +1,8 @@
 <template>
-  <div id="nav">
+  <!-- <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
-  </div>
+  </div> -->
   <router-view/>
 </template>
 
@@ -13,8 +13,8 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background:white;
-  // background-image: url("./logos/icon.svg");
+  // background:white;
+   background: url("./logos/icon.svg") no-repeat-x;
 }
 
 #nav {
