@@ -21,7 +21,11 @@
                             <label for="password" class=" mb-2 mt-2 h5 ">Mot de passe</label>
                             <input v-model="password" type="password" id="password" class="form-control mb-2 mt-2" placeholder="Veuillez rentrer votre mot de passe ici"/>
                         </div>
-                        <button @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>
+                        <div class="row" v-if="status == 'error_to_sigin'">
+                          <p class="text-danger h5">Utilisateur déjà existant ! veuillez vous identifier via la page de connexion</p>
+                        </div>
+                        <span v-if="status == 'creating'" class="spinner-border text-secondary"></span>
+                        <button v-else @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>
                 </form>
                 <div>
                     <h5 class="mt-3 mb-2">Déjà un compte ?</h5>
@@ -33,6 +37,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '../components/Header.vue'
 
 export default {
@@ -55,11 +60,12 @@ export default {
       } else {
         return false
       }
-    }
+    },
+    ...mapState(['status'])
   },
   methods: {
     createAccount: function (e) {
-      e.preventDefault()
+      const self = this
       this.$store.dispatch('createAccount', {
         email: this.email,
         firstname: this.firstname,
@@ -67,10 +73,10 @@ export default {
         password: this.password
       }).then((response) => {
         console.log('Utilisateur créé avec succès !')
+        self.$router.push('profile')
       }, (error) => {
         console.log(error)
       })
-      console.log(this.lastname, this.firstname, this.email, this.password)
     }
   }
 }

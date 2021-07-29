@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
         return res.status(400).json({ error: "Tous les champs doivent être renseignés !" });
       }
 
-      db.User.findOne({ where : { email }})
+     await db.User.findOne({ where : { email }})
       .then(user => {
           if(!user){
               return res.status(401).json({error :  "Utilisateur non trouvé !"})
@@ -71,5 +71,19 @@ exports.login = async (req, res) => {
   catch (error){
     return res.status(500).json({ error : "c'est dans le catch du try-catch login" })
   }
-}
+};
 
+exports.getOneUser = async (req, res) => {
+  const id = req.body.userId;
+   await db.User.findOne({ where : { id }})
+      .then(user => {
+        res.status(200).json({
+          email : user.email,
+          firstname : user.firstname,
+          lastname : user.lastname,
+          profileImageUrl : user.profileImageUrl,
+          isAdmin : user.isAdmin
+        })
+      })
+      .catch(error => res.status(500).json({ error : "erreur du findOne" })) 
+}
