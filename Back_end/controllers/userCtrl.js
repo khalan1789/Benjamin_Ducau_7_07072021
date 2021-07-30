@@ -9,8 +9,7 @@ exports.signup = async (req, res) => {
       const firstname = req.body.firstname;
       const email = req.body.email;
       const password = req.body.password;
-      console.log(lastname + " / " + firstname + " / " + email + " / " + password);
-
+     
       if (!lastname || !firstname || !password || !email ) {
         return res.status(400).json({ error: "Informations manquantes...." });
       };
@@ -74,16 +73,19 @@ exports.login = async (req, res) => {
 };
 
 exports.getOneUser = async (req, res) => {
-  const id = req.body.userId;
-   await db.User.findOne({ where : { id }})
-      .then(user => {
-        res.status(200).json({
-          email : user.email,
-          firstname : user.firstname,
-          lastname : user.lastname,
-          profileImageUrl : user.profileImageUrl,
-          isAdmin : user.isAdmin
+  try{
+    const token = req.headers.common.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const id = decodedToken.userId
+  
+    db.User.findOne({ where : { id }})
+        .then(user => {
+          res.status(200).json({user
+          })
         })
-      })
-      .catch(error => res.status(500).json({ error : "erreur du findOne" })) 
+        .catch(error => res.status(500).json({ error : "erreur du findOne" })) 
+  } catch {
+    res.status(406).json({
+      error : "problème dans le try cacth"})
+  }
 }
