@@ -1,5 +1,5 @@
 <template>
-   <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+   <nav class="navbar navbar-expand-lg navbar-dark bg-secondary bg-gradient">
     <div class="container-fluid">
         <span class="navbar-brand" ><img class="logo-img" src="../logos/icon-left-font-monochrome-white.svg" alt="logo groupomania"></span>
         <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
