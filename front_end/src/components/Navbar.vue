@@ -1,0 +1,53 @@
+<template>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+    <div class="container-fluid">
+        <span class="navbar-brand" ><img class="logo-img" src="../logos/icon-left-font-monochrome-white.svg" alt="logo groupomania"></span>
+        <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end " id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item mr-3">
+                    <router-link class="nav-link text-white " to="/profile">Mon profil</router-link>
+                </li>
+                <li class="nav-item ml-3">
+                    <a><router-link class="nav-link text-white " to="/login">Se déconnecter</router-link></a>
+                </li>
+            </ul>
+        </div>
+  </div>
+</nav>
+</template>
+
+<script>
+export default ({
+  name: 'Navbar',
+  data () {
+
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.logo-img{
+    width: 200px;
+    height: 70px;
+    @media (min-width: 630px){
+        width: 350px;
+    };
+    @media (min-width: 930px){
+        width: auto;
+        margin-left: 2rem;
+    };
+}
+#navbarNav{
+    @media (min-width: 990px){
+        margin-right: 2rem;
+    };
+}
+.nav-item{
+     @media (min-width: 990px){
+        margin-right: 2rem;
+    };
+}
+</style>
