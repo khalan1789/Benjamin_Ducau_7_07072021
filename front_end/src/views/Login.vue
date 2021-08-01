@@ -2,7 +2,7 @@
     <main class="">
             <Header></Header>
         <div class="container d-flex justify-content-md-center bg-primary col-lg-4 mb-5" >
-            <div class="row justify-content-md-center col text-center">
+            <div class="row col text-center">
                 <h2 class="mt-5 mb-4">Bienvenue chez Groupomania</h2>
                 <form class="mt-2">
                     <div class="form-group col ">
@@ -21,7 +21,7 @@
                 </form>
                 <div>
                     <h5 class="mt-3 mb-2">Pas encore inscrit ?</h5>
-                    <button type="submit" class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" ><router-link class="text-secondary bg-light text-decoration-none" to="/signin">S'inscrire</router-link></button>
+                    <button type="submit" class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" ><router-link class="text-secondary bg-light text-decoration-none" to="/signup">S'inscrire</router-link></button>
                 </div>
             </div>
         </div>
@@ -56,18 +56,16 @@ export default {
   },
   methods: {
     loginUser: function (e) {
-    //   e.preventDefault()
       const self = this
-      this.$store.dispatch('loginUser', {
+      this.$store.dispatch('logUser', {
         email: this.email,
         password: this.password
       }).then((response) => {
-        self.$router.push('profile')
-        console.log(response)
+        self.$router.push('/')
+        console.log('réponse suite au login : ' + response)
       }, (error) => {
         console.log(error)
       })
-      e.preventDefault()
     }
   }
 }

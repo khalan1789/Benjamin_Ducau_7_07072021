@@ -2,13 +2,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser")
-// const { Sequelize } = require('sequelize');
-
-// //connexion?
-// const sequelize = new Sequelize("groupomania", "root","Groupomania_OC_2021",{
-//   dialect: "mysql",
-//   host:"localhost"
-// })
+const path = require("path")
 
 //ROUTES
 
@@ -29,8 +23,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// gestion des images dans un dossier image statique
+app.use('/images', express.static(path.join(__dirname,'images')));
 
-
-app.use("/api/users", userRoute);
+// Appel final les routes configurées
+app.use("/api/auth", userRoute);
 
 module.exports = app;
