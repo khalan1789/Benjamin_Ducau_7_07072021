@@ -8,10 +8,10 @@
         <div class="collapse navbar-collapse justify-content-end " id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item mr-3">
-                    <router-link class="nav-link text-white " to="/profile">Mon profil</router-link>
+                    <router-link class="nav-link text-white nav-btn-hover" to="/profile">Mon profil</router-link>
                 </li>
                 <li class="nav-item ml-3">
-                    <a><router-link class="nav-link text-white " to="/login">Se déconnecter</router-link></a>
+                    <a @click="logout()" class="nav-link text-white ">Se déconnecter</a>
                 </li>
             </ul>
         </div>
@@ -22,8 +22,11 @@
 <script>
 export default ({
   name: 'Navbar',
-  data () {
-
+  methods: {
+    logout: function () {
+      this.$store.commit('logout')
+      this.$router.push('login')
+    }
   }
 })
 </script>
@@ -49,5 +52,9 @@ export default ({
      @media (min-width: 990px){
         margin-right: 2rem;
     };
+    :hover{
+        font-size: 1.2rem;
+        color: purple;
+    }
 }
 </style>

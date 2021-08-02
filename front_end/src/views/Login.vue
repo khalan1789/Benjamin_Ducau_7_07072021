@@ -7,7 +7,7 @@
                 <form class="mt-2">
                     <div class="form-group col ">
                         <label for="email"  class=" mb-2 mt-2 h5">Email</label>
-                        <input v-model="email" type="email" id="email" class="form-control mb-2 mt-2" placeholder="Veuillez rentrer votre email ici" />
+                        <input v-model="email" type="email" id="email" class="form-control mb-2 mt-2" placeholder="Veuillez rentrer votre email ici" pattern="^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$" required/>
                     </div>
                     <div class="form-group col">
                         <label for="password" class=" mb-2 mt-2 h5 ">Mot de passe</label>
@@ -41,6 +41,11 @@ export default {
       password: ''
     }
   },
+  mounted: function () {
+    if (this.$store.state.user.userId !== -1) {
+      this.$router.push('/profile')
+    }
+  },
   components: {
     Header
   },
@@ -55,7 +60,7 @@ export default {
     ...mapState(['status'])
   },
   methods: {
-    loginUser: function (e) {
+    loginUser: function () {
       const self = this
       this.$store.dispatch('logUser', {
         email: this.email,

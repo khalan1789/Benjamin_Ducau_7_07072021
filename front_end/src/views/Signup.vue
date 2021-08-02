@@ -22,7 +22,7 @@
                         <input v-model="password" type="password" id="password" class="form-control mb-2 mt-2" placeholder="Veuillez rentrer votre mot de passe ici"/>
                     </div>
                     <div class="row" v-if="status == 'error_to_sigin'">
-                      <p class="text-danger h5">Utilisateur déjà existant ! veuillez vous identifier via la page de connexion</p>
+                      <p class="text-danger h5">Utilisateur déjà existant ou bien les champs ne sont pas corretement renseignés! Le mot de passe doit avoir au moins 8 caractères, une minuscule et une majuscule.</p>
                     </div>
                     <span v-if="status == 'creating'" class="spinner-border text-secondary"></span>
                     <button type="submit" @submit="validateFields" v-else @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>

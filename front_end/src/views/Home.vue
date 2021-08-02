@@ -4,7 +4,7 @@
     <div class="container nav-bar bg-light border border-secondary border-4 mb-5 mt-3">
         <h1 class="  text-secondary">Bienvenue sur le forum de Groupomania</h1>
     </div>
-    <main class="container d-flex flex-column justify-content-center col-lg-8">
+    <main class="container d-flex flex-column justify-content-center col-lg-6">
         <div class="card mt-2 mb-3 shadow-lg border-secondary">
             <h5 class="bg-secondary p-1 bg-gradient text-start text-white fst-italic" >Posté par Fleury michon</h5>
             <img src="../logos/curry.jpg" class="card-img-top"  alt="">
@@ -66,6 +66,13 @@ export default {
   name: 'Home',
   components: {
     Navbar
+  },
+  mounted () {
+    if (this.$store.state.user.userId === -1) {
+      this.$router.push('login')
+      return
+    }
+    this.$store.dispatch('getUserInfos')
   }
 }
 </script>
@@ -84,7 +91,5 @@ export default {
   min-height: 30vh;
   max-height: 90vh;
 }
-// .comment-btn{
-//   min-width: 30px;
-// }
+
 </style>
