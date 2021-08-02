@@ -46,7 +46,7 @@ export default createStore({
     },
     logUser: function (state, user) {
       instance.defaults.headers.common.Authorization = 'Bearer ' + user.token
-      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('user', JSON.stringify(user)) // wawa mets la
       state.user = user
     },
     userInfos: function (state, userInfos) {
@@ -62,16 +62,14 @@ export default createStore({
     }
   },
   actions: {
-    logUser: ({ commit }, userInfos) => {
+    login: ({ commit }, userInfos) => {
       commit('setStatus', 'loading')
       return new Promise((resolve, reject) => {
         instance.post('/auth/login', (userInfos))
           .then((response) => {
-            // instance.defaults.headers.common.Authorization = 'Bearer ' + user.token
             commit('setStatus', '')
-            commit('logUser', 'response.data')
+            commit('logUser', response.data)
             resolve(response)
-            localStorage.setItem('user', JSON.stringify(response.data)) // grâce à lui que le user est ds le local storage
           })
           .catch((error) => {
             commit('setStatus', 'error_to_login')
@@ -102,6 +100,20 @@ export default createStore({
         .catch((error) => {
           console.log(error)
         })
+    },
+    deleteAccount: ({ commit, state }) => {
+      return new Promise((resolve, reject) => {
+        instance.delete('/auth/profile/' + state.user.userId)
+          .then((response) => {
+            commit('setStatus', 'deleted')
+            commit('logUser')
+            resolve(response)
+          })
+          .catch((error) => {
+            commit('setStatus', 'error_to_sigin')
+            reject(error)
+          })
+      })
     }
   },
   modules: {

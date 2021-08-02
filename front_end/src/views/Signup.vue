@@ -25,7 +25,7 @@
                       <p class="text-danger h5">Utilisateur déjà existant ou bien les champs ne sont pas corretement renseignés! Le mot de passe doit avoir au moins 8 caractères, une minuscule et une majuscule.</p>
                     </div>
                     <span v-if="status == 'creating'" class="spinner-border text-secondary"></span>
-                    <button type="submit" @submit="validateFields" v-else @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>
+                    <button type="submit" v-else @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>
                 </form>
                 <div>
                     <h5 class="mt-3 mb-2">Déjà un compte ?</h5>
@@ -63,14 +63,6 @@ export default {
         return true
       }
     },
-    // regexFields: function () {
-    //   const regexpEmail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$/
-    //   const regexpFields = /^[A-Za-z- éè^ïö]+$/
-    //   const email = regexpEmail.test(this.email)
-    //   const firstname = regexpFields.test(this.firstname)
-    //   const lastname = regexpFields.test(this.lastname)
-    //   if (email !== true || )
-    // },
     ...mapState(['status'])
   },
   methods: {
@@ -83,7 +75,7 @@ export default {
         password: this.password
       }).then((response) => {
         console.log('Utilisateur créé avec succès !')
-        this.$store.dispatch('logUser', {
+        this.$store.dispatch('login', {
           email: this.email,
           password: this.password
         }).then((response) => {

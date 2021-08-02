@@ -41,11 +41,11 @@ export default {
       password: ''
     }
   },
-  mounted: function () {
-    if (this.$store.state.user.userId !== -1) {
-      this.$router.push('/profile')
-    }
-  },
+  // mounted: function () {
+  //   if (this.$store.state.user.userId !== -1) {
+  //     this.$router.push('/profile')
+  //   }
+  // },
   components: {
     Header
   },
@@ -62,7 +62,7 @@ export default {
   methods: {
     loginUser: function () {
       const self = this
-      this.$store.dispatch('logUser', {
+      this.$store.dispatch('login', {
         email: this.email,
         password: this.password
       }).then((response) => {

@@ -12,7 +12,7 @@
                   <button @click="backToMainMenu ()" class="btn w-50 border-primary mt-5 align-self-center bg-light border-secondary">Retour à l'accueil</button>
                   <div class="info-button-group mt-3 d-flex flex-column w-50 align-self-center">
                     <button @click="logout()" class="btn mt-3 mb-4 bg-light border-secondary">Déconnexion</button>
-                    <button class="btn mt-3 mb-4 btn-sm bg-light border-secondary text-secondary ">Supprimer mon compte</button>
+                    <button @click="deleteAccount()" class="btn mt-3 mb-4 btn-sm bg-light border-secondary text-secondary ">Supprimer mon compte</button>
                   </div>
               </div>
         </div>
@@ -46,6 +46,20 @@ export default {
     backToMainMenu: function () {
       this.$router.push('/')
     }
+    // deleteAccount: function ()  {
+    //   return new Promise((resolve, reject) => {
+    //     instance.delete('/auth/profile/' + state.user.userId)
+    //       .then((response) => {
+    //         commit('setStatus', 'deleted')
+    //         this.logout
+    //         resolve(response)
+    //       })
+    //       .catch((error) => {
+    //         commit('setStatus', 'error_to_sigin')
+    //         reject(error)
+    //       })
+    //   })
+    // }
   }
 }
 </script>
