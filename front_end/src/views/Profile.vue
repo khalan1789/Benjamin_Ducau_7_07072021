@@ -1,29 +1,38 @@
 <template>
     <main class="bg-light">
         <div class="profile-card">
-              <div class="photo-group border-secondary bg-primary">
-                <input type="file" accept=".jpg, .jpeg, .png" />
+            <div class="photo-group border-secondary bg-primary">
                 <p class=""><img class="bg-info img-profile mt-4" :src="user.profileImageUrl" alt="photo de profil"/></p>
-                <button class="btn btn-sm bg-light border-secondary mb-md-4 mb-3">Ajouter ma photo</button>
-              </div>
-              <div class="info-group bg-primary text-center">
-                  <h2 class="text-secondary text-break mt-3 mb-4">{{ user.firstname }} {{user.lastname }}</h2>
-                  <h5 class="text-break mt-3 mb-4">{{user.email }}</h5>
-                  <button @click="backToMainMenu ()" class="btn w-50 border-primary mt-5 align-self-center bg-light border-secondary">Retour à l'accueil</button>
-                  <div class="info-button-group mt-3 d-flex flex-column w-50 align-self-center">
+                <div class="d-flex flex-column align-items-center">
+                    <input type="file" @change="onFileSelected" ref="changeImageInput" class="invisible" accept=".jpg, .jpeg, .png" />
+                    <button @click="$refs.changeImageInput.click()" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Changer ma photo</button>
+                    <button @click="uploadImg" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Valider</button>
+                </div>
+            </div>
+            <div class="info-group bg-primary text-center">
+                <h2 class="text-secondary text-break mt-3 mb-4">{{ user.firstname }} {{user.lastname }}</h2>
+                <h5 class="text-break mt-3 mb-4">{{user.email }}</h5>
+                <button @click="backToMainMenu ()" class="btn w-50 border-primary mt-5 align-self-center bg-light border-secondary">Retour à l'accueil</button>
+                <div class="info-button-group mt-3 d-flex flex-column w-50 align-self-center">
                     <button @click="logout()" class="btn mt-3 mb-4 bg-light border-secondary">Déconnexion</button>
                     <button @click="deleteAccount()" class="btn mt-3 mb-4 btn-sm bg-light border-secondary text-secondary ">Supprimer mon compte</button>
-                  </div>
-              </div>
+                </div>
+            </div>
         </div>
     </main>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Profile',
+  data () {
+    return {
+      selectedFile: null
+    }
+  },
   mounted () {
     console.log('state user id : ' + this.$store.state.user.userId)
     if (this.$store.state.user.userId === -1) {
@@ -45,21 +54,27 @@ export default {
     },
     backToMainMenu: function () {
       this.$router.push('/')
+    },
+    onFileSelected (event) {
+      this.selectedFile = event.target.files[0]
+    },
+    uploadImg () {
+      console.log('user.userId : ' + this.$store.state.user.userId)
+      console.log('user : ' + this.$store.state.user)
+      axios.put('http://localhost:3000/api/auth/profile/' + this.$store.state.user.userId, this.$store.state.user, this.selectedFile)
+        .then((response) => {
+          this.$store.commit('userInfos')
+          console.log('resp du serv' + response)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    deleteAccount: function () {
+      this.logout()
+      this.$store.dispatch('deleteAccount')
+      // this.logout()
     }
-    // deleteAccount: function ()  {
-    //   return new Promise((resolve, reject) => {
-    //     instance.delete('/auth/profile/' + state.user.userId)
-    //       .then((response) => {
-    //         commit('setStatus', 'deleted')
-    //         this.logout
-    //         resolve(response)
-    //       })
-    //       .catch((error) => {
-    //         commit('setStatus', 'error_to_sigin')
-    //         reject(error)
-    //       })
-    //   })
-    // }
   }
 }
 </script>

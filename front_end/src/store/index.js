@@ -106,7 +106,6 @@ export default createStore({
         instance.delete('/auth/profile/' + state.user.userId)
           .then((response) => {
             commit('setStatus', 'deleted')
-            commit('logUser')
             resolve(response)
           })
           .catch((error) => {
