@@ -5,8 +5,36 @@
         <h1 class="  text-secondary">Bienvenue sur le forum de Groupomania</h1>
     </div>
     <main class="container d-flex flex-column justify-content-center col-lg-6">
-        <div>
+        <!-- Nouvel article -->
+        <div class="accordion" id="accordionContainer">
+          <div class="accordion-item bg-light bg-gradient border border-secondary bloc-article mb-3">
+              <!-- <h2 class="accordion header text-light text-center fs-3 fst-italic bg-secondary">Votre nouvel article</h2> -->
+              <h2 class="accordion-header" id="headingOne">
+                  <button class="btn btn-lg bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  </button>
+              </h2>
+              <div class="accordion-collapse collapse" id="collapseOne">
+                <div class="accordion-body">
+                  <form action="" class="p-1 form-group col bg-transparent mt-4">
+                  <div class="form-group mt-3">
+                      <label for="messageTitle" class="form-label text-secondary fs-4 fst-italic fw-bolder" required>Titre</label>
+                      <input class="form-control fs-4 " id="messageTitle" type="text text-wrap" placeholder="Votre titre ici ...">
+                  </div>
+                  <div class="form-group mt-3 text-start">
+                      <label for="messageTextContain" class="form-label fs-5 text-secondary fw-bolder fst-italic">Pour renseigner l'artcile</label>
+                      <textarea class="form-control fs-4 " id="messageTextContain" type="text" placeholder="Votre texte ici ..."></textarea>
+                  </div>
+                  <div class="form-group mt-3 mb-3 text-start">
+                      <label for="newPostImage" class=" form-label text-end text-secondary fs-5 fw-bolder fst-italic ml-2">Ajouter une photo</label>
+                      <input class="form-control " type="file" id="newPostImage" accept=".jpg, .jpeg, .png">
+                  </div>
+                  <button class="btn btn-lg bg-secondary bg-gradient text-light mt-1 mb-2" type="submit">Poster cet article</button>
+                  </form>
+                </div>
+              </div>
+          </div>
         </div>
+                  <!-- Zone articles  -->
         <div class="card mt-2 mb-3 shadow-lg border-secondary">
             <h5 class="bg-secondary p-1 bg-gradient text-start text-white fst-italic" >Posté par Fleury michon</h5>
             <img src="../logos/curry.jpg" class="card-img-top"  alt="">
@@ -92,6 +120,9 @@ export default {
 .post-section{
   min-height: 30vh;
   max-height: 90vh;
+}
+.bloc-article{
+  // min-height: 50vh;
 }
 
 </style>
