@@ -8,6 +8,9 @@
         <div class="collapse navbar-collapse justify-content-end " id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item mr-3">
+                    <router-link class="nav-link text-white" to="/">Retour au forum</router-link>
+                </li>
+                <li class="nav-item mr-3">
                     <router-link class="nav-link text-white nav-btn-hover" to="/profile">Mon profil</router-link>
                 </li>
                 <li class="nav-item ml-3">
@@ -21,7 +24,7 @@
 
 <script>
 export default ({
-  name: 'Navbar',
+  name: 'NavbarMessage',
   methods: {
     logout: function () {
       this.$store.commit('logout')

@@ -5,6 +5,8 @@
         <h1 class="  text-secondary">Bienvenue sur le forum de Groupomania</h1>
     </div>
     <main class="container d-flex flex-column justify-content-center col-lg-6">
+        <div>
+        </div>
         <div class="card mt-2 mb-3 shadow-lg border-secondary">
             <h5 class="bg-secondary p-1 bg-gradient text-start text-white fst-italic" >Posté par Fleury michon</h5>
             <img src="../logos/curry.jpg" class="card-img-top"  alt="">
