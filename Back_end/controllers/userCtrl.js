@@ -10,7 +10,7 @@ exports.signup = async (req, res) => {
       const firstname = req.body.firstname;
       const email = req.body.email;
       const password = req.body.password;
-      const profileImageUrl = `${req.protocol}://${req.get('host')}/images/default-icon.png`
+      const profileImageUrl = ""; //`${req.protocol}://${req.get('host')}/images/default-icon.png`
     // controle des données saisies
       const regExpText = /^[A-Za-z- éè^ïö]+$/;
       const regExpMail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$/;
@@ -108,44 +108,18 @@ exports.getOneUser = async (req, res) => {
           })
           .catch((error) => res.status(500).json({ error })) 
   } catch (error){
-    res.status(401).json({
-      error })
-  }
-};
-
-exports.addProfilePhoto = async (req, res) => {
-  try{
-      const lastname = req.body.lastname; 
-      const firstname = req.body.firstname;
-      const email = req.body.email;
-      const profileImageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-
-      await db.User.update({ profileImageUrl }, { where : { lastname, firstname, email }})
-          .then(user => {
-            res.status(200).json({user,
-              message: "mise à jour du profil effectué "
-            })
-          })
-          .catch((error) => res.status(400).json({ error }))
-  } 
-  catch {
-    res.status(401).json({
+      res.status(401).json({
       error })
   }
 };
 
 exports.deleteUser = async (req, res) => {
   try{
-      const lastname = req.body.lastname; 
-      const firstname = req.body.firstname;
-      const email = req.body.email;
-      const id = req.body.userId
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const id = decodedToken.userId
 
-    await User.destroy({
-      where: {
-        firstname , lastname, email, id
-      }
-    })
+    await db.User.destroy({ where: { id } })
     .then(() => {
       res.status(200).json({
         message: "suppression du compte effectuée "
@@ -157,3 +131,28 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ error })
   }
 }
+
+exports.addProfilePhoto = async (req, res) => {
+  try{
+      console.log("test du path url");
+      console.log(req.file)
+      console.log(req.body);
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+      const id = decodedToken.userId
+      console.log("user id : " + id )
+      const profileImageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  
+      await db.User.update({ profileImageUrl }, { where : { id }})
+          .then(user => {
+            res.status(200).json({user,
+              message: "mise à jour du profil effectué "
+            })
+          })
+          .catch((error) => res.status(400).json({ error }))
+  } 
+  catch (error) {
+      res.status(402).json({
+       error })
+  }
+};

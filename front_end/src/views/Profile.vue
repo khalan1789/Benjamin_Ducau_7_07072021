@@ -4,7 +4,7 @@
             <div class="photo-group border-secondary bg-primary">
                 <p class=""><img class="bg-info img-profile mt-4" :src="user.profileImageUrl" alt="photo de profil"/></p>
                 <div class="d-flex flex-column align-items-center">
-                    <input type="file" @change="onFileSelected" ref="changeImageInput" class="invisible" accept=".jpg, .jpeg, .png" />
+                    <input type="file" @change="onFileSelected" ref="changeImageInput" class="invisible" name="image" accept=".jpg, .jpeg, .png" />
                     <button @click="$refs.changeImageInput.click()" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Changer ma photo</button>
                     <button @click="uploadImg" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Valider</button>
                 </div>
@@ -24,13 +24,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 
 export default {
   name: 'Profile',
   data () {
     return {
-      selectedFile: null
+      selectedFile: ''
     }
   },
   mounted () {
@@ -40,7 +40,6 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    console.log('voyons le dispatch : ' + this.$store.dispatch('getUserInfos'))
   },
   computed: {
     ...mapState({
@@ -58,17 +57,16 @@ export default {
     onFileSelected (event) {
       this.selectedFile = event.target.files[0]
     },
-    uploadImg () {
-      console.log('user.userId : ' + this.$store.state.user.userId)
-      console.log('user : ' + this.$store.state.user)
-      axios.put('http://localhost:3000/api/auth/profile/' + this.$store.state.user.userId, this.$store.state.user, this.selectedFile)
-        .then((response) => {
-          this.$store.commit('userInfos')
-          console.log('resp du serv' + response)
+    async uploadImg () {
+      const formData = new FormData()
+      formData.append('image', this.selectedFile)
+      formData.append('name', this.selectedFile.name)
+      await this.$store.dispatch('uploadProfileImage', formData)
+        .then(() => {
+          this.$store.dispatch('getUserInfos')
         })
-        .catch((error) => {
-          console.log(error)
-        })
+        .catch(error =>
+          console.log(error))
     },
     deleteAccount: function () {
       this.logout()

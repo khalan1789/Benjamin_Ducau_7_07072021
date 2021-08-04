@@ -46,7 +46,7 @@ export default createStore({
     },
     logUser: function (state, user) {
       instance.defaults.headers.common.Authorization = 'Bearer ' + user.token
-      localStorage.setItem('user', JSON.stringify(user)) // wawa mets la
+      localStorage.setItem('user', JSON.stringify(user))
       state.user = user
     },
     userInfos: function (state, userInfos) {
@@ -110,6 +110,27 @@ export default createStore({
           })
           .catch((error) => {
             commit('setStatus', 'error_to_sigin')
+            reject(error)
+          })
+      })
+    },
+    uploadProfileImage: ({ commit, state }, formData) => {
+      // console.log(formData)
+      // const formData = new FormData()
+      // formData.append('image', this.selectedFile)
+      // formData.append('name', this.selectedFile.name)
+      console.log(formData)
+      return new Promise((resolve, reject) => {
+        instance.put('http://localhost:3000/api/auth/profile/' + state.user.userId, formData)
+          .then((response) => {
+            // commit('userInfos')
+            commit('setStatus', 'uploaded')
+            console.log('resp du serv' + response)
+            resolve(response)
+          })
+          .catch((error) => {
+            console.log(error)
+            commit('setStatus', 'error_upload')
             reject(error)
           })
       })
