@@ -1,8 +1,8 @@
 <template>
     <div class="page-vue">
         <NavbarMessage/>
-        <main class="container d-flex flex-column justify-content-center col-lg-6 ">
-            <div class="card mt-2 mb-3 shadow-lg border-secondary">
+        <main class="container d-flex flex-column justify-content-center col-lg-7 ">
+            <div class="card mt-3 mb-3 shadow-lg border-secondary">
                 <div class="d-flex justify-content-between bg-secondary bg-gradient">
                     <div class="profile-avatar col-2 col-lg-2 d-flex justify-content-center align-items-center ">
                        <img :src="user.profileImageUrl" alt="photo profil de l'éditeur du message" class="avatar" />
@@ -10,7 +10,7 @@
                     <h3 class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > {{ user.firstname}} {{ user.lastname}}</h3>
                     <button class="btn bg-light col-3 col-lg-2"><fa icon="trash-alt"></fa></button>
                 </div>
-                <img src="../logos/curry.jpg" class="card-img-top"  alt="">
+                <img src="../logos/arrabiata.jpg" class="card-img-top article-img"  alt="image de l'article" >
                 <div class="card-body">
                     <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
                     <p class="h5 card-text">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think</p>
@@ -105,5 +105,9 @@ export default {
 .avatar{
     width: 100%;
     height: 100%;
+}
+.article-img{
+  object-fit: fill;
+  max-height: 690px;
 }
 </style>

@@ -34,34 +34,27 @@
                 </div>
             </div>
         </div>
-                  <!-- Zone articles  -->
-        <div class="card mt-2 mb-3 shadow-lg border-secondary">
-            <h5 class="bg-secondary p-1 bg-gradient text-start text-white fst-italic" >Posté par Fleury michon</h5>
-            <img src="../logos/curry.jpg" class="card-img-top"  alt="">
-            <div class="card-body">
-                <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
-                <p class="h5 card-text">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think</p>
+    <!-- Zone articles  -->
+        <div class="card mt-2 mb-3 shadow-lg border-secondary messagePosted">
+            <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
+            <h5 class="  text-start text-white fst-italic" >Posté par Fleury michon</h5>
+            <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">12</span></span>
             </div>
-            <div class="d-flex p-1 mb-3 mt-2">
-                <button class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
-                <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">12</span></span>
+            <img src="../logos/arrabiata.jpg" class="card-img-top article-img"  alt="photo de l'article posté">
+            <div class="card-body overflow-auto" style="max-height:100px">
+                <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
+                <p class="text-break text-start"> class="h5 card-text text-start text-break">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, nam. Est rerum illo, tenetur possimus veniam nobis adipisci, reiciendis, cum fugiat obcaecati provident fugit! Possimus ad deleniti reprehenderit ex non?</p>
             </div>
         <!-- Zonne commentaires -->
-          <div class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded">
-            <div class="d-flex justify-content-between">
-                <span class="fs-6 text-start fst-italic fw-bolder"> Marie de La fuente <fa class="mr-2" icon="comment-dots"/> : </span> <button class="invisible" role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
-            </div>
-                <p class="text-start">Waouh c'est de troip de la balle ce truc de fou! oh pinaise que jak ckjkjke edkjdeknd kjdkjdekj jljlkj</p>
-          </div>
-          <div class="input-group mb-3 p-2">
-              <input class="form-control" placeholder="Ajouter un commentaire" aria-label="zone d'ajout de commentaire"  type="text-area"/>
-              <button class="btn btn-outline-secondary comment-btn">Commenter</button>
+          <div class=" mb-1 mt-2 border-top border-light" >
+              <button class="w-50 text-center btn btn-lg btn-outline-secondary bg-primary comment-btn ">Voir l'article en détail / commenter</button>
           </div>
       </div>
       <!-- séparation des cards -->
        <!-- <div class="card mt-2 mb-3 shadow-lg border-secondary">
          <h5 class="bg-secondary p-1 bg-gradient text-start text-white" ><i>Posté par Fleury michon</i></h5>
-        <img src="../logos/arrabiata.jpg" class="card-img-top" alt="">
+        <img src="" class="card-img-top" alt="">
         <div class="card-body">
           <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
           <p class="h5 card-text">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think</p>
@@ -121,8 +114,16 @@ export default {
   min-height: 30vh;
   max-height: 90vh;
 }
-.bloc-article{
-  // min-height: 50vh;
+.messagePosted{
+  max-height: 650px;
+  overflow: hidden;
 }
-
+.article-img{
+  object-fit: fill;
+  max-height: 400px;
+}
+.ellipseText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
