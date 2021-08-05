@@ -8,6 +8,7 @@ import store from './store'
 
 // utilisation de boostrap avec vue
 import 'bootstrap/scss/bootstrap.scss'
+import 'bootstrap'
 
 library.add(fas)
 
