@@ -10,7 +10,7 @@ exports.signup = async (req, res) => {
       const firstname = req.body.firstname;
       const email = req.body.email;
       const password = req.body.password;
-      const profileImageUrl = ""; //`${req.protocol}://${req.get('host')}/images/default-icon.png`
+      const profileImageUrl = `${req.protocol}://${req.get('host')}/images/default-icon.png`
     // controle des données saisies
       const regExpText = /^[A-Za-z- éè^ïö]+$/;
       const regExpMail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$/;
@@ -77,14 +77,14 @@ exports.login = async (req, res) => {
                         res.status(200).json({ 
                             userId : user.id,
                             token : jwt.sign(      
-                                {userId : user.id},
+                                {userId : user.id, isAdmin : user.isAdmin},
                                 'RANDOM_TOKEN_SECRET',
                                 {expiresIn : '12h'}
                             ),
                         })
                         // console.log("id après : " + id)
                     })
-                    .catch(error => res.status(500).json({ error : "erreur de cryptage mdp" }))
+                    .catch(error => res.status(500).json({ error : "erreur de cryptage token" }))
       })
       // console.log("id après : " + id)
       .catch(error => res.status(500).json({ error : "erreur serveur" }))

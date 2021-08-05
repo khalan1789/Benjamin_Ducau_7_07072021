@@ -17,12 +17,12 @@
                     <div class="accordion-body border border-secondary">
                         <form action="" class="p-1 form-group col bg-transparent mt-4">
                             <div class="form-group mt-3">
-                                <label for="messageTitle" class="form-label text-secondary fs-4 fst-italic fw-bolder" required>Titre</label>
-                                <input class="form-control fs-4 " id="messageTitle" type="text text-wrap" placeholder="Votre titre ici ...">
+                                <label for="messageTitle" class="form-label text-secondary fs-4 fst-italic fw-bolder" required >Titre</label>
+                                <input v-model="articleTitle" class="form-control fs-4 " id="messageTitle" type="text text-wrap" placeholder="Votre titre ici ..." >
                             </div>
                             <div class="form-group mt-3 text-start">
-                                <label for="messageTextContain" class="form-label fs-5 text-secondary fw-bolder fst-italic">Pour renseigner l'artcile</label>
-                                <textarea class="form-control fs-4 " id="messageTextContain" type="text" placeholder="Votre texte ici ..."></textarea>
+                                <label for="messageTextContain" class="form-label fs-5 text-secondary fw-bolder fst-italic">Pour renseigner l'article</label>
+                                <textarea v-model="articleContain" class="form-control fs-4 " id="messageTextContain" type="text" placeholder="Votre texte ici ..."></textarea>
                             </div>
                             <div class="form-group mt-3 mb-3 text-start">
                                 <label for="newPostImage" class=" form-label text-end text-secondary fs-5 fw-bolder fst-italic ml-2">Ajouter une photo</label>
@@ -90,12 +90,24 @@ export default {
   components: {
     Navbar
   },
+  data () {
+    return {
+      articleTitle: '',
+      articleContain: '',
+      selectedFile: ''
+    }
+  },
   mounted () {
     if (this.$store.state.user.userId === -1) {
       this.$router.push('login')
       return
     }
     this.$store.dispatch('getUserInfos')
+  },
+  methods: {
+    onFileSelected (event) {
+      this.selectedFile = event.target.files[0]
+    }
   }
 }
 </script>
