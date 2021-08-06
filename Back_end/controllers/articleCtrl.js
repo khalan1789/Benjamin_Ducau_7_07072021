@@ -1,7 +1,7 @@
 const db = require("../models");
 const fs = require("fs");
 
-exports.publish = async (req, res) => {
+exports.publishArticle = async (req, res) => {
     try {
         console.log(req.body)
         console.log(req.body.title)

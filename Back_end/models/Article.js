@@ -2,10 +2,6 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
     const Article = sequelize.define('Article',{
-        userId:{
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
         title:{
             type: DataTypes.STRING(100),
             allowNull: false,
@@ -13,10 +9,35 @@ module.exports = (sequelize, DataTypes) => {
         contain:{
             type: DataTypes.TEXT,
         },
-       fileUrl:{
+        imageUrl:{
             type: DataTypes.STRING,
             
         }
     })
+        
+    
+    Article.associate = (models) => {
+    // association table articles avec celles des users
+        Article.belongsTo(models.User);
+    
+    // association table articles avec celles des commentaires
+        Article.hasMany(models.Comment, {
+            foreignKey: {
+                allowNull: true
+            },
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        });
+   
+    // association table articles avec celles des likes 
+        Article.hasMany(models.Like, {
+            foreignKey: {
+                allowNull: true
+            },
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        });
+    };
+
     return Article
-}
+};

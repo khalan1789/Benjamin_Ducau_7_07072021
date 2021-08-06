@@ -55,5 +55,6 @@ server.on("listening", () => {
   .catch((error) => console.log(error)); */
 
 // db.sequelize.sync({ force: true }); 
+// db.sequelize.sync({ alter: true }); 
 
 server.listen(port);

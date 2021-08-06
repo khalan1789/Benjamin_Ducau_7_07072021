@@ -27,5 +27,37 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue : false
         }
     })
-    return User
-}
+
+    
+    User.associate = (models) => {
+    // association table users avec celles des articles
+        User.hasMany(models.Article, {
+            foreignKey: {
+                allowNull: true
+            },
+            onDelete: "SET NULL",
+            onUpdate: "CASCADE",
+        });
+  
+    // association table users avec celles des commentaires
+        User.hasMany(models.Comment, {
+            foreignKey: {
+                allowNull: false
+            },
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        })
+
+    // association table users avec celles des likes
+        User.hasMany(models.Like, {
+            foreignKey: {
+                allowNull: true
+            },
+            onDelete: "SET NULL",
+            onUpdate: "CASCADE",
+        })
+    };
+
+    return User  
+};
+

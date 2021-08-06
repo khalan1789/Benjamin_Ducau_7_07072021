@@ -7,10 +7,7 @@ const multer= require("../middlewares/multer-article");
 // Routes
 
 // ajout d'un article
-router.post("/article", multer, articleCtrl.publish);
-
-// modification d'un article (commentaires, likes)?
-router.put("/article/:id");
+router.post("/article", multer, articleCtrl.publishArticle);
 
 // suppression d'un article
 
