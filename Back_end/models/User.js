@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     // association table users avec celles des articles
         User.hasMany(models.Article, {
             foreignKey: {
-                allowNull: true
+                allowNull: false
             },
             onDelete: "SET NULL",
             onUpdate: "CASCADE",

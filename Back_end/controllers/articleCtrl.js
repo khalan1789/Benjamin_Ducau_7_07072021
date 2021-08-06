@@ -9,12 +9,12 @@ exports.publishArticle = async (req, res) => {
         console.log(req.body.userId)
         const articleContain = req.file ? 
         {
-            userId: req.body.userId,
+            UserId: req.body.userId,
             title : req.body.title,
             contain : req.body.contain,
             imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : {
-            userId: req.body.userId,
+            UserId: req.body.userId,
             title : req.body.title,
             contain : req.body.contain
         };
@@ -26,7 +26,7 @@ exports.publishArticle = async (req, res) => {
             return res.status(400).json({ error : "L'article doit contenir au moins un texte ou une image"})
         }
         else{
-            await db.Article.create({ userId :articleContain.userId, title: articleContain.title, contain: articleContain.contain, fileUrl: articleContain.imageUrl  })
+            await db.Article.create({ UserId :articleContain.UserId, title: articleContain.title, contain: articleContain.contain, imageUrl: articleContain.imageUrl  })
             .then(()=>  res.status(201).json({ message: "Article publié avec succès !" }))
             .catch(error => res.status(500).json({ error : "erreur lors de la création de l'article"}))
         }
