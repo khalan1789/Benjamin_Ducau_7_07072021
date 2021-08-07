@@ -38,6 +38,17 @@ export default createStore({
       email: '',
       profileImageUrl: '',
       isAdmin: ''
+    },
+    articles: {
+      articleId: '',
+      contain: '',
+      title: '',
+      imageUrl: ''
+    },
+    articleInfos: {
+      contain: '',
+      title: '',
+      image: ''
     }
   },
   mutations: {
@@ -59,6 +70,12 @@ export default createStore({
         isAdmin: false
       }
       localStorage.removeItem('user')
+    },
+    articles: function (state, articles) {
+      state.articles = articles
+    },
+    articleInfos: function (state, articleInfos) {
+      state.articleInfos = articleInfos
     }
   },
   actions: {
@@ -115,10 +132,6 @@ export default createStore({
       })
     },
     uploadProfileImage: ({ commit, state }, formData) => {
-      // console.log(formData)
-      // const formData = new FormData()
-      // formData.append('image', this.selectedFile)
-      // formData.append('name', this.selectedFile.name)
       console.log(formData)
       return new Promise((resolve, reject) => {
         instance.put('http://localhost:3000/api/auth/profile/' + state.user.userId, formData)
@@ -131,6 +144,28 @@ export default createStore({
           .catch((error) => {
             console.log(error)
             commit('setStatus', 'error_upload')
+            reject(error)
+          })
+      })
+    },
+    getAllArticles: ({ commit }) => {
+      instance.get('/article')
+        .then(response => {
+          console.log(response.data.articles)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    publishArticle: ({ commit, state }, formData) => {
+      return new Promise((resolve, reject) => {
+        instance.post('/article', formData)
+          .then((response) => {
+            commit('setStatus', 'published')
+            resolve(response)
+          })
+          .catch((error) => {
+            commit('setStatus', 'error_publishing')
             reject(error)
           })
       })

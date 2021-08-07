@@ -75,7 +75,7 @@ exports.deleteArticle = async (req, res) => {
 // récupération de tous les articles
 exports.getAllArticles = async (req, res) => {
     try {
-        await db.Article.findAll()
+        await db.Article.findAll({include : db.User, include: db.Like})
         .then(articles => res.status(200).json({ articles }))
         .catch(error => res.status(400).json({ error : "erreur lors de la récupération des articles"}))
     } catch (error) {

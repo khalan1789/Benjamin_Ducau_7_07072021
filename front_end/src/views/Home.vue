@@ -26,57 +26,33 @@
                             </div>
                             <div class="form-group mt-3 mb-3 text-start">
                                 <label for="newPostImage" class=" form-label text-end text-secondary fs-5 fw-bolder fst-italic ml-2">Ajouter une photo</label>
-                                <input class="form-control " type="file" id="newPostImage" accept=".jpg, .jpeg, .png">
+                                <input  @change="onFileSelected" class="form-control" type="file" id="newArticleImage" accept=".jpg, .jpeg, .png">
                             </div>
-                            <button class="btn btn-lg bg-secondary bg-gradient text-light mt-1 mb-2" type="submit">Poster cet article</button>
+                            <div class="d-flex flex-column-reverse flex-md-row justify-content-md-between">
+                                <button @click="cancelFields" class="btn btn-rounded mt-3 mt-md-2 mb-3 pl-3">Annuler</button>
+                                <button @click="publishArticle" class="btn btn-lg bg-secondary bg-gradient text-light mt-3 mt-md-2 mb-2 mr-3" type="submit" :class="{'disabled' : !validateFields}" >Poster cet article</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     <!-- Zone articles  -->
-        <div class="card mt-2 mb-3 shadow-lg border-secondary messagePosted">
+        <div v-for="article in articles" :key="article.Id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
-            <h5 class="  text-start text-white fst-italic" >Posté par Fleury michon</h5>
+            <h5 class="  text-start text-white fst-italic" >Posté par </h5>
             <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">12</span></span>
             </div>
-            <img src="../logos/arrabiata.jpg" class="card-img-top article-img"  alt="photo de l'article posté">
+            <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté">
             <div class="card-body overflow-auto" style="max-height:100px">
-                <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
-                <p class="text-break text-start"> class="h5 card-text text-start text-break">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, nam. Est rerum illo, tenetur possimus veniam nobis adipisci, reiciendis, cum fugiat obcaecati provident fugit! Possimus ad deleniti reprehenderit ex non?</p>
+                <h3 class="card-title border-bottom-primary"> {{ article.title }}</h3>
+                <p class="text-break text-start">{{ article.contain }} </p>
             </div>
         <!-- Zonne commentaires -->
           <div class=" mb-1 mt-2 border-top border-light" >
               <button class="w-50 text-center btn btn-lg btn-outline-secondary bg-primary comment-btn ">Voir l'article en détail / commenter</button>
           </div>
       </div>
-      <!-- séparation des cards -->
-       <!-- <div class="card mt-2 mb-3 shadow-lg border-secondary">
-         <h5 class="bg-secondary p-1 bg-gradient text-start text-white" ><i>Posté par Fleury michon</i></h5>
-        <img src="" class="card-img-top" alt="">
-        <div class="card-body">
-          <h3 class="card-title border-bottom-primary">Titre de la description ici</h3>
-          <p class="h5 card-text">Some quick example text to build on the card title and make up the bulk of the card's content. It's very nice dont you think</p>
-        <div>
-          <p class="text-md-end">Posté par Fleury Michon</p>
-        </div>
-        </div>
-        <div class="d-flex p-1">
-          <button class="btn btn-outline-secondary w-50 " style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
-          <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">12</span></span>
-        </div>
-        <div class="d-flex flex-column flex-lg-row justify-content-between">
-          <span>Rose Marie de La fuente a dit : </span>
-          <p class="h5 ">Waouh c'est de troip de la balle ce truc de fou!</p>
-        </div>
-        <p class="h5">1er commentaire ici</p>
-        <p>2ème commentaire ici</p>
-        <div class="input-group mb-3 p-2">
-          <input class="form-control" placeholder="Ajouter un commentaire" aria-label="zone d'ajout de commentaire" aria-describedby="bouton validation commentaire" type="text-area"/>
-          <button class="btn btn-outline-secondary comment-btn">Commenter</button>
-        </div>
-      </div> -->
     </main>
   </div>
 </template>
@@ -84,6 +60,7 @@
 <script>
 // @ is an alias to /src
 import Navbar from '@/components/Navbar.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
@@ -103,11 +80,52 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
+    this.$store.dispatch('getAllArticles')
   },
   methods: {
     onFileSelected (event) {
       this.selectedFile = event.target.files[0]
+    },
+    async publishArticle () {
+      if (this.articleContain === '' && !this.selectedFile) {
+        return console.log('erreur au moins un des champs est requis : contenu ou image')
+      }
+      const formData = new FormData()
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile)
+        formData.append('name', this.selectedFile.name)
+      }
+      formData.append('title', this.articleTitle)
+      formData.append('contain', this.articleContain)
+      formData.append('userId', this.$store.state.user.userId)
+      confirm('Vous êtes sur le point de publier un article, êtes-vous sûr(e) ?')
+      await this.$store.dispatch('publishArticle', formData)
+        .then(() => {
+          this.$store.dispatch('getAllArticles')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    cancelFields () {
+      this.articleTitle = ''
+      this.articleContain = ''
+      this.selectedFile = ''
     }
+  },
+  computed: {
+    validateFields: function () {
+      if (this.articleTitle === '') {
+        return false
+      } else if (this.articleContain === '' && !this.selectedFile) {
+        return false
+      } else {
+        return true
+      }
+    },
+    ...mapState({
+      articles: 'articles'
+    })
   }
 }
 </script>
