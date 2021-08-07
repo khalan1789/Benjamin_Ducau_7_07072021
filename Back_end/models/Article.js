@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     // association table articles avec celles des commentaires
         Article.hasMany(models.Comment, {
             foreignKey: {
-                allowNull: true
+                allowNull: false
             },
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     // association table articles avec celles des likes 
         Article.hasMany(models.Like, {
             foreignKey: {
-                allowNull: true
+                allowNull: false
             },
             onDelete: "CASCADE",
             onUpdate: "CASCADE",

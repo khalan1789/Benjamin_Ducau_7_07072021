@@ -8,4 +8,7 @@ const likeCtrl = require("../controllers/likeCtrl")
 // ajout d'un like
 router.post("/like", likeCtrl.likeArticle);
 
+// récupération de tous les likes
+router.get("/like", likeCtrl.getAllLikes)
+
 module.exports = router;

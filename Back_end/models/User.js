@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     // association table users avec celles des likes
         User.hasMany(models.Like, {
             foreignKey: {
-                allowNull: true
+                allowNull: false
             },
             onDelete: "SET NULL",
             onUpdate: "CASCADE",

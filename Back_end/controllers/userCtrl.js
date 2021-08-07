@@ -1,8 +1,9 @@
+// required
 const db = require("../models");
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// création d'un utilisateur
 exports.signup = async (req, res) => {
   try {
     // récupération des données saisies
@@ -51,6 +52,7 @@ exports.signup = async (req, res) => {
   }
 };
 
+// connexion d'un utilisateur
 exports.login = async (req, res) => {
   try {
       const email = req.body.email;
@@ -94,6 +96,7 @@ exports.login = async (req, res) => {
   }
 };
 
+// récupération d'un utilisateur
 exports.getOneUser = async (req, res) => {
   try{
       const token = req.headers.authorization.split(' ')[1];
@@ -113,6 +116,7 @@ exports.getOneUser = async (req, res) => {
   }
 };
 
+// suppression d'un utilisateur
 exports.deleteUser = async (req, res) => {
   try{
     const token = req.headers.authorization.split(' ')[1];
@@ -132,6 +136,7 @@ exports.deleteUser = async (req, res) => {
   }
 }
 
+// modification de la photo de profil d'un utilisateur
 exports.addProfilePhoto = async (req, res) => {
   try{
       // console.log("test du path url");

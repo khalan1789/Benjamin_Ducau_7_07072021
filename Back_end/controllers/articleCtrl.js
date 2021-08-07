@@ -1,6 +1,8 @@
+// required
 const db = require("../models");
 const fs = require("fs");
 
+// publication d'un article
 exports.publishArticle = async (req, res) => {
     try {
         console.log(req.body)
@@ -35,6 +37,7 @@ exports.publishArticle = async (req, res) => {
     }
 };
 
+// suppression d'un article
 exports.deleteArticle = async (req, res) => {
     try {
         const id = req.body.id
@@ -67,4 +70,27 @@ exports.deleteArticle = async (req, res) => {
     catch (error) {
       res.status(500).json({ error : "erreur lors de la suppression de l'article" })
     }
-}
+};
+
+// récupération de tous les articles
+exports.getAllArticles = async (req, res) => {
+    try {
+        await db.Article.findAll()
+        .then(articles => res.status(200).json({ articles }))
+        .catch(error => res.status(400).json({ error : "erreur lors de la récupération des articles"}))
+    } catch (error) {
+        res.status(500).json({ error : "erreur lors de la récupération des articles"})
+    }
+};
+
+// récupération d'un article
+exports.getOneArticle = async (req, res) => {
+    try {
+        const id = req.params.id
+        await db.Article.findOne({ where : { id }})
+        .then(article => res.status(200).json({ article }))
+        .catch(error => res.status(400).json({ error : "erreur lors de la récupération de l'article"}))
+    } catch (error) {
+        res.status(500).json({ error : "erreur lors de la récupération de l'article"})
+    }
+};
