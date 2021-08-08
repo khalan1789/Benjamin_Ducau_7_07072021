@@ -98,7 +98,7 @@ exports.getOneArticle = async (req, res) => {
             attributes : ["id", "title", "contain", "imageUrl", "createdAt", "UserId"],
             where : { id },
             include : [
-                {model : db.User, attributes : ["firstname", "lastname"]},
+                {model : db.User, attributes : ["firstname", "lastname", "profileImageUrl"]},
                 {model : db.Like},
                 {model : db.Comment, attributes: ["contain"], include : [{model : db.User, attributes : ["firstname", "lastname"]}]}
             ]

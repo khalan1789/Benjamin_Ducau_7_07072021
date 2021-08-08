@@ -46,9 +46,11 @@ export default createStore({
       imageUrl: ''
     },
     articleInfos: {
+      articleId: '',
       contain: '',
       title: '',
-      image: ''
+      imageUrl: '',
+      articleUserId: ''
     }
   },
   mutations: {
@@ -170,6 +172,16 @@ export default createStore({
             reject(error)
           })
       })
+    },
+    getSelectedArticle: ({ commit }, urlId) => {
+      instance.get('/article/' + urlId)
+        .then(response => {
+          commit('articleInfos', response.data.article)
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   modules: {
