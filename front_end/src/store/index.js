@@ -39,7 +39,7 @@ export default createStore({
       profileImageUrl: '',
       isAdmin: ''
     },
-    articles: {
+    article: {
       articleId: '',
       contain: '',
       title: '',
@@ -71,8 +71,8 @@ export default createStore({
       }
       localStorage.removeItem('user')
     },
-    articles: function (state, articles) {
-      state.articles = articles
+    articleStatus: function (state, article) {
+      state.article = article
     },
     articleInfos: function (state, articleInfos) {
       state.articleInfos = articleInfos
@@ -151,7 +151,8 @@ export default createStore({
     getAllArticles: ({ commit }) => {
       instance.get('/article')
         .then(response => {
-          console.log(response.data.articles)
+          commit('articleStatus', response.data.articles)
+          console.log(response.data)
         })
         .catch((error) => {
           console.log(error)

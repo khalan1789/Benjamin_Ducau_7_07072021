@@ -17,5 +17,7 @@ router.put("/profile/:id",auth, multer, userCtrl.addProfilePhoto );
 
 router.delete("/profile/:id",auth, userCtrl.deleteUser)
 
+router.get("/users", userCtrl.getAllUsers)
+
 
 module.exports = router;

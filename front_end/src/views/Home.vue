@@ -38,10 +38,10 @@
             </div>
         </div>
     <!-- Zone articles  -->
-        <div v-for="article in articles" :key="article.Id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted">
+        <div v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
-            <h5 class="  text-start text-white fst-italic" >Posté par </h5>
-            <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">12</span></span>
+            <h5 class="  text-start text-white fst-italic" >Posté par {{ article.User }} </h5>
+            <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">{{ article.Likes }}</span></span>
             </div>
             <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté">
             <div class="card-body overflow-auto" style="max-height:100px">
@@ -50,7 +50,7 @@
             </div>
         <!-- Zonne commentaires -->
           <div class=" mb-1 mt-2 border-top border-light" >
-              <button class="w-50 text-center btn btn-lg btn-outline-secondary bg-primary comment-btn ">Voir l'article en détail / commenter</button>
+              <button @click="showThisArticle (article.id)" class="w-50 text-center btn btn-lg btn-outline-secondary bg-primary comment-btn ">Voir l'article en détail / commenter</button>
           </div>
       </div>
     </main>
@@ -80,7 +80,11 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    this.$store.dispatch('getAllArticles')
+    this.$nextTick(async function () {
+      await this.$store.dispatch('getAllArticles')
+    })
+    // downloadArticles()
+    // this.$store.dispatch('getAllArticles')
   },
   methods: {
     onFileSelected (event) {
@@ -111,6 +115,17 @@ export default {
       this.articleTitle = ''
       this.articleContain = ''
       this.selectedFile = ''
+    },
+    showThisArticle (articleId) {
+      this.$router.push(`/profile/${articleId}`)
+    },
+    nameAuthor () {
+      const firstname = this.article.User.firstname
+      const lastname = this.article.User.lastname
+      return firstname + ' ' + lastname
+    },
+    async downloadArticles () {
+      await this.$store.dispatch('getAllArticles')
     }
   },
   computed: {
@@ -124,7 +139,7 @@ export default {
       }
     },
     ...mapState({
-      articles: 'articles'
+      articles: 'article'
     })
   }
 }
@@ -149,7 +164,7 @@ export default {
   overflow: hidden;
 }
 .article-img{
-  object-fit: fill;
+  object-fit: contain;
   max-height: 400px;
 }
 .ellipseText{

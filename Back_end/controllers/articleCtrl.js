@@ -14,7 +14,7 @@ exports.publishArticle = async (req, res) => {
             UserId: req.body.userId,
             title : req.body.title,
             contain : req.body.contain,
-            imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            imageUrl : `${req.protocol}://${req.get('host')}/articlesImages/${req.file.filename}`
         } : {
             UserId: req.body.userId,
             title : req.body.title,
@@ -68,18 +68,24 @@ exports.deleteArticle = async (req, res) => {
         })    
     }
     catch (error) {
-      res.status(500).json({ error : "erreur lors de la suppression de l'article" })
+      res.status(500).json({ error : "erreur serveur" })
     }
 };
 
 // récupération de tous les articles
 exports.getAllArticles = async (req, res) => {
     try {
-        await db.Article.findAll({include : db.User, include: db.Like})
-        .then(articles => res.status(200).json({ articles }))
-        .catch(error => res.status(400).json({ error : "erreur lors de la récupération des articles"}))
+        await db.Article.findAll({
+        include : [
+            {model : db.User, attributes : ["firstname", "lastname"]},
+            {model : db.Like},
+            {model : db.Comment}
+        ]
+        })
+            .then(articles => res.status(200).json({ articles }))
+            .catch(error => res.status(400).json({ error : "erreur lors de la récupération des articles"}))
     } catch (error) {
-        res.status(500).json({ error : "erreur lors de la récupération des articles"})
+        res.status(500).json({ error : "erreur serveur"})
     }
 };
 

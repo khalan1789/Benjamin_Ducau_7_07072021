@@ -161,3 +161,17 @@ exports.addProfilePhoto = async (req, res) => {
        error })
   }
 };
+
+// obtention de tous les utilisateurs
+exports.getAllUsers = async (req, res) => {
+  try{
+    await db.User.findAll()
+      .then( users => {
+        res.status(200).json( users )
+      })
+      .catch((error) => res.status(400).json({ error }))
+  } catch {
+    res.status(402).json({
+      message : "erreur de récupération des utilisateurs" })
+  }
+};
