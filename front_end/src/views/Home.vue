@@ -25,7 +25,7 @@
                                 <textarea v-model="articleContain" class="form-control fs-4 " id="messageTextContain" type="text" placeholder="Votre texte ici ..."></textarea>
                             </div>
                             <div class="form-group mt-3 mb-3 text-start">
-                                <label for="newPostImage" class=" form-label text-end text-secondary fs-5 fw-bolder fst-italic ml-2">Ajouter une photo</label>
+                                <label for="newArticleImage" class=" form-label text-end text-secondary fs-5 fw-bolder fst-italic ml-2">Ajouter une photo</label>
                                 <input  @change="onFileSelected" class="form-control" type="file" id="newArticleImage" accept=".jpg, .jpeg, .png">
                             </div>
                             <div class="d-flex flex-column-reverse flex-md-row justify-content-md-between">
@@ -38,15 +38,21 @@
             </div>
         </div>
     <!-- Zone articles  -->
-        <div v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
+        <div v-if="articles.length === 0" class="card" >
+            <div class="card-body">
+                <h1 class="card-title">Aucun article à afficher pour le moment !!</h1>
+                <p class="card-text fs-2">Franchissez le cap de votre timidité et soyez le premier à poster un article !</p>
+        </div>
+        </div>
+        <div v-else v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
-            <h5 class="  text-start text-white fst-italic" >Posté par {{ article.User }} </h5>
-            <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span class="align-text-top text-white">{{ article.Likes }}</span></span>
+            <h5 class="  text-start text-white fst-italic" v-if="article.User">Posté par {{ article.User.firstname }} {{ article.User.lastname }} </h5>
+            <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
             </div>
-            <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté">
+            <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté" v-if="article.imageUrl">
             <div class="card-body overflow-auto" style="max-height:100px">
                 <h3 class="card-title border-bottom-primary"> {{ article.title }}</h3>
-                <p class="text-break text-start">{{ article.contain }} </p>
+                <p class="text-break text-start fs-4">{{ article.contain }} </p>
             </div>
         <!-- Zonne commentaires -->
           <div class=" mb-1 mt-2 border-top border-light" >
@@ -81,7 +87,7 @@ export default {
     }
     this.$store.dispatch('getUserInfos')
     this.$nextTick(async function () {
-      await this.$store.dispatch('getAllArticles')
+      this.$store.dispatch('getAllArticles')
     })
     // downloadArticles()
     // this.$store.dispatch('getAllArticles')
@@ -90,7 +96,8 @@ export default {
     onFileSelected (event) {
       this.selectedFile = event.target.files[0]
     },
-    async publishArticle () {
+    async publishArticle (e) {
+      e.preventDefault()
       if (this.articleContain === '' && !this.selectedFile) {
         return console.log('erreur au moins un des champs est requis : contenu ou image')
       }
@@ -103,6 +110,7 @@ export default {
       formData.append('contain', this.articleContain)
       formData.append('userId', this.$store.state.user.userId)
       confirm('Vous êtes sur le point de publier un article, êtes-vous sûr(e) ?')
+      e.preventDefault()
       await this.$store.dispatch('publishArticle', formData)
         .then(() => {
           this.$store.dispatch('getAllArticles')

@@ -76,10 +76,11 @@ exports.deleteArticle = async (req, res) => {
 exports.getAllArticles = async (req, res) => {
     try {
         await db.Article.findAll({
-        include : [
-            {model : db.User, attributes : ["firstname", "lastname"]},
-            {model : db.Like},
-            {model : db.Comment}
+            attributes : ["id", "title", "contain", "imageUrl", "createdAt", "UserId"],
+            order : [ ["createdAt", "DESC"] ],
+            include : [
+                {model : db.User, attributes : ["firstname", "lastname"]},
+                {model : db.Like, attributes : ["id"]},
         ]
         })
             .then(articles => res.status(200).json({ articles }))
@@ -93,7 +94,14 @@ exports.getAllArticles = async (req, res) => {
 exports.getOneArticle = async (req, res) => {
     try {
         const id = req.params.id
-        await db.Article.findOne({ where : { id }})
+        await db.Article.findOne({
+            where : { id },
+            include : [
+                {model : db.User, attributes : ["firstname", "lastname"]},
+                {model : db.Like},
+                {model : db.Comment, attributes: ["contain"], include : [{model : db.User, attributes : ["firstname", "lastname"]}]}
+            ]
+        })
         .then(article => res.status(200).json({ article }))
         .catch(error => res.status(400).json({ error : "erreur lors de la récupération de l'article"}))
     } catch (error) {
