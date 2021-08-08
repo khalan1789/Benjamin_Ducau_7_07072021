@@ -95,6 +95,7 @@ exports.getOneArticle = async (req, res) => {
     try {
         const id = req.params.id
         await db.Article.findOne({
+            attributes : ["id", "title", "contain", "imageUrl", "createdAt", "UserId"],
             where : { id },
             include : [
                 {model : db.User, attributes : ["firstname", "lastname"]},

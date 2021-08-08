@@ -86,11 +86,7 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    this.$nextTick(async function () {
-      this.$store.dispatch('getAllArticles')
-    })
-    // downloadArticles()
-    // this.$store.dispatch('getAllArticles')
+    this.$store.dispatch('getAllArticles')
   },
   methods: {
     onFileSelected (event) {
@@ -125,7 +121,7 @@ export default {
       this.selectedFile = ''
     },
     showThisArticle (articleId) {
-      this.$router.push(`/profile/${articleId}`)
+      this.$router.push(`/article/${articleId}`)
     },
     nameAuthor () {
       const firstname = this.article.User.firstname
