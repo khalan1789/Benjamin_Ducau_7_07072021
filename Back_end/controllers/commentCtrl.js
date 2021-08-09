@@ -18,6 +18,8 @@ exports.publishComment = async (req, res) => {
 
 // suppression d'un commentaire
 exports.deleteComment = async (req, res) => {
+    console.log("req body : " + req.body.id)
+    console.log("req params : " + req.params.id)
     try {
         const id = req.body.id;
 

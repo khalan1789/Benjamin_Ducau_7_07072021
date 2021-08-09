@@ -39,13 +39,16 @@ exports.publishArticle = async (req, res) => {
 
 // suppression d'un article
 exports.deleteArticle = async (req, res) => {
+    console.log('body: ' + req.body)
+    console.log('id : ' + req.body.id)
+    console.log('id params : ' + req.params.id)
     try {
-        const id = req.body.id
+        const id = req.params.id
         
         await db.Article.findOne({ where: { id } })
         .then(article => {
             // l'article contient-il une image?
-            if(article.fileUrl == null) {
+            if(article.imageUrl == null) {
                 db.Article.destroy({ where: { id } })
                 .then(() => {
                   res.status(200).json({
@@ -54,7 +57,8 @@ exports.deleteArticle = async (req, res) => {
                 })
                 .catch((error) => res.status(401).json({ error })) 
             } else {
-            const filename = article.fileUrl.split('/images/')[1];
+            const filename = article.imageUrl.split('/articlesImages/')[1];
+            console.log("filename : " + filename)
             fs.unlink(`articlesImages/${filename}`, () => {
                 db.Article.destroy({ where: { id } })
                 .then(() => {

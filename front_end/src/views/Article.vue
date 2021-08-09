@@ -8,7 +8,7 @@
                        <img :src="article.User.profileImageUrl" alt="photo profil de l'éditeur du message" class="avatar" />
                     </div>
                     <h3 v-if="article.User" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > {{ article.User.firstname}} {{ article.User.lastname}}</h3>
-                    <button class="btn bg-light col-3 col-lg-2"><fa icon="trash-alt"></fa></button>
+                    <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article"><fa icon="trash-alt"></fa></button>
                 </div>
                 <img :src="article.imageUrl" class="card-img-top article-img"  alt="image de l'article" v-if="article.imageUrl">
                 <div class="card-body">
@@ -21,9 +21,10 @@
                 </div>
                 <!-- Zonne commentaires -->
                 <div >
-                    <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded">
+                    <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded" :data-id="article.Comments.id">
                         <div class="d-flex justify-content-between">
-                            <span class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span> <button class="bg-light " role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
+                            <span v-if="comment.User" class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span>
+                            <button class="bg-light " role="delete for admin or author" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
                         </div>
                             <p class="text-start">{{ comment.contain }}</p>
                     </div>
@@ -55,7 +56,8 @@ export default {
   computed: {
     ...mapState({
       user: 'userInfos',
-      article: 'articleInfos'
+      article: 'articleInfos',
+      comment: 'commentInfosStatus'
     })
   },
   created () {
@@ -71,13 +73,6 @@ export default {
     this.$store.dispatch('getUserInfos')
   },
   methods: {
-    countLikes (likes) {
-      let numberOfLike = 0
-      for (let like = 0; like < likes.length; like++) {
-        numberOfLike += 1
-        return numberOfLike
-      }
-    },
     submitComment () {
       const contain = this.commentContain
       const articleId = this.article.id
@@ -88,6 +83,13 @@ export default {
       this.$store.dispatch('getSelectedArticle', urlId)
       this.commentContain = ''
       window.alert('Commentaire envoyé!')
+    },
+    deleteComment (commentId) {
+      console.log('id com : ' + commentId)
+      this.$store.dispatch('deleteComment', commentId)
+      const urlId = this.article.id
+      console.log('via store : ' + this.$store.article.id)
+      this.$store.dispatch('getSelectedArticle', urlId)
     }
   }
 }

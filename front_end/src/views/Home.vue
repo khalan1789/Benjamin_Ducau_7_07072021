@@ -46,7 +46,7 @@
         </div>
         <div v-else v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
-            <h5 class="  text-start text-white fst-italic" v-if="article.User">Posté par {{ article.User.firstname }} {{ article.User.lastname }} </h5>
+            <h5 class="  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }}</h5>
             <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
             </div>
             <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté" v-if="article.imageUrl">
@@ -57,6 +57,9 @@
         <!-- Zonne commentaires -->
           <div class=" mb-1 mt-2 border-top border-light" >
               <button @click="showThisArticle (article.id)" class="w-50 text-center btn btn-lg btn-outline-secondary bg-primary comment-btn ">Voir l'article en détail / commenter</button>
+          </div>
+          <div v-if="user.isAdmin === true">
+          <button id="delete-btn" class="btn btn-sm border border-secondary align-self-center w-50 mt-4 mb-1" @click="onDeleteArticle (article.id)" v-if="article">Supprimer l'article</button>
           </div>
       </div>
     </main>
@@ -89,7 +92,6 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    // this.$store.dispatch('getAllArticles')
   },
   methods: {
     onFileSelected (event) {
@@ -126,13 +128,15 @@ export default {
     showThisArticle (articleId) {
       this.$router.push(`/article/${articleId}`)
     },
-    nameAuthor () {
-      const firstname = this.article.User.firstname
-      const lastname = this.article.User.lastname
+    nameAuthor (firstname, lastname) {
       return firstname + ' ' + lastname
     },
     async downloadArticles () {
       await this.$store.dispatch('getAllArticles')
+    },
+    async onDeleteArticle (articleId) {
+      await this.$store.dispatch('onDeleteArticle', articleId)
+      this.downloadArticles()
     }
   },
   computed: {
@@ -146,7 +150,8 @@ export default {
       }
     },
     ...mapState({
-      articles: 'article'
+      articles: 'article',
+      user: 'userInfos'
     })
   }
 }
@@ -177,5 +182,11 @@ export default {
 .ellipseText{
   overflow: hidden;
   text-overflow: ellipsis;
+}
+#delete-btn{
+  &:hover{
+    background-color: rgb(230, 19, 19);
+    color: white;
+  }
 }
 </style>
