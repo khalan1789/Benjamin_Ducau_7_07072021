@@ -80,13 +80,16 @@ export default {
       selectedFile: ''
     }
   },
+  created () {
+    this.$store.dispatch('getAllArticles')
+  },
   mounted () {
     if (this.$store.state.user.userId === -1) {
       this.$router.push('login')
       return
     }
     this.$store.dispatch('getUserInfos')
-    this.$store.dispatch('getAllArticles')
+    // this.$store.dispatch('getAllArticles')
   },
   methods: {
     onFileSelected (event) {

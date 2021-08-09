@@ -4,8 +4,8 @@
         <main class="container d-flex flex-column justify-content-center col-lg-7 ">
             <div class="card mt-3 mb-3 shadow-lg border-secondary">
                 <div class="d-flex justify-content-between bg-secondary bg-gradient">
-                    <div class="profile-avatar col-2 col-lg-2 d-flex justify-content-center align-items-center ">
-                       <img v-if="article.User" :src="article.User.profileImageUrl" alt="photo profil de l'éditeur du message" class="avatar" />
+                    <div v-if="article.User" class="profile-avatar col-2 col-lg-2 d-flex justify-content-center align-items-center ">
+                       <img :src="article.User.profileImageUrl" alt="photo profil de l'éditeur du message" class="avatar" />
                     </div>
                     <h3 v-if="article.User" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > {{ article.User.firstname}} {{ article.User.lastname}}</h3>
                     <button class="btn bg-light col-3 col-lg-2"><fa icon="trash-alt"></fa></button>
@@ -20,17 +20,17 @@
                     <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
                 </div>
                 <!-- Zonne commentaires -->
-                <div v-if="article.Comments.length > 0">
+                <div >
                     <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded">
                         <div class="d-flex justify-content-between">
-                            <span v-if="comment.User" class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.firstname }} <fa class="mr-2" icon="comment-dots"/> : </span> <button class="bg-light " role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
+                            <span class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.firstname }} <fa class="mr-2" icon="comment-dots"/> : </span> <button class="bg-light " role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
                         </div>
-                            <p v-if="comment.contain" class="text-start">{{ comment.contain }}</p>
+                            <p class="text-start">{{ comment.contain }}</p>
                     </div>
                 </div>
                 <div class="input-group mb-3 p-2">
-                    <input class="form-control" placeholder="Ajouter un commentaire" aria-label="zone d'ajout de commentaire"  type="text-area"/>
-                    <button class="btn btn-outline-secondary comment-btn">Commenter</button>
+                    <input v-model="commentContain" class="form-control" placeholder="Ajouter un commentaire" aria-label="zone d'ajout de commentaire"  type="text-area"/>
+                    <button @click="submitComment" class="btn btn-outline-secondary comment-btn">Commenter</button>
                 </div>
             </div>
         </main>
@@ -47,11 +47,19 @@ export default {
   components: {
     NavbarMessage
   },
+  data () {
+    commentContain: ''
+  },
   computed: {
     ...mapState({
       user: 'userInfos',
       article: 'articleInfos'
     })
+  },
+  created () {
+    const urlId = this.$route.params.id
+    console.log('id de url : ' + urlId)
+    this.$store.dispatch('getSelectedArticle', urlId)
   },
   mounted () {
     if (this.$store.state.user.userId === -1) {
@@ -59,10 +67,22 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    const urlId = this.$route.params.id
-    console.log('id de url : ' + urlId)
-    this.$store.dispatch('getSelectedArticle', urlId)
-  }
+  },
+  methods: {
+    countLikes (likes) {
+      let numberOfLike = 0
+      for (let like = 0; like < likes.length; like++) {
+        numberOfLike += 1
+        return numberOfLike
+      }
+    },
+    submitComment () {
+      this.$store.dispatch('commentInfos', {
+        contain : this.commentContain,
+        articleId : this.articleId
+      })
+    }
+  },
 }
 </script>
 

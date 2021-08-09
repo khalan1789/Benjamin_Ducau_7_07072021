@@ -51,6 +51,11 @@ export default createStore({
       title: '',
       imageUrl: '',
       articleUserId: ''
+    },
+    commentInfos: {
+      articleId: '',
+      contain: '',
+      userId: ''
     }
   },
   mutations: {
