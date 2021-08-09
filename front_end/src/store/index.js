@@ -40,7 +40,7 @@ export default createStore({
       isAdmin: ''
     },
     article: {
-      articleId: '',
+      id: '',
       contain: '',
       title: '',
       imageUrl: ''
@@ -50,12 +50,23 @@ export default createStore({
       contain: '',
       title: '',
       imageUrl: '',
-      articleUserId: ''
+      articleUserId: '',
+      Likes: {
+        id: '',
+        ArticleId: '',
+        UserId: ''
+      }
     },
-    commentInfos: {
+    comments: {
+      id: '',
       articleId: '',
       contain: '',
       userId: ''
+    },
+    likes: {
+      id: '',
+      ArticleId: '',
+      UserId: ''
     }
   },
   mutations: {
@@ -83,6 +94,12 @@ export default createStore({
     },
     articleInfos: function (state, articleInfos) {
       state.articleInfos = articleInfos
+    },
+    commentsInfos: function (state, comments) {
+      state.comments = comments
+    },
+    likesInfos: function (state, likes) {
+      state.likes = likes
     }
   },
   actions: {
@@ -116,6 +133,7 @@ export default createStore({
           })
       })
     },
+    // Récupération des infos de l'utilisateur connecté
     getUserInfos: ({ commit, state }) => {
       instance.get('/auth/profile/' + state.user.userId)
         .then((response) => {
@@ -125,6 +143,7 @@ export default createStore({
           console.log(error)
         })
     },
+    // Suppression du compte de l'utilisateur connecté
     deleteAccount: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
         instance.delete('/auth/profile/' + state.user.userId)
@@ -138,6 +157,7 @@ export default createStore({
           })
       })
     },
+    // Changement de l'image de profil de l'utilisateur connecté
     uploadProfileImage: ({ commit, state }, formData) => {
       console.log(formData)
       return new Promise((resolve, reject) => {
@@ -155,6 +175,7 @@ export default createStore({
           })
       })
     },
+    // Récupération de tous les articles
     getAllArticles: ({ commit }) => {
       instance.get('/article')
         .then(response => {
@@ -165,6 +186,7 @@ export default createStore({
           console.log(error)
         })
     },
+    // Publication d'un article
     publishArticle: ({ commit, state }, formData) => {
       return new Promise((resolve, reject) => {
         instance.post('/article', formData)
@@ -178,16 +200,36 @@ export default createStore({
           })
       })
     },
-    getSelectedArticle: ({ commit }, urlId) => {
+    // Accès à l'article sélectionné
+    getSelectedArticle: ({ commit, state }, urlId) => {
       instance.get('/article/' + urlId)
         .then(response => {
           commit('articleInfos', response.data.article)
-          console.log(response.data)
+          commit('commentsInfos', response.data.article.Comments)
+          commit('likesInfos', response.data.article.Likes)
+          console.log('likesInfos', response.data.article.Likes)
         })
         .catch((error) => {
           console.log(error)
         })
     },
+    // Suppression de l'article
+    onDeleteArticle: ({ commit }, articleId) => {
+      return new Promise((resolve, reject) => {
+        instance.delete('/article/' + articleId)
+          .then((response) => {
+            // commit('setStatus', 'published')
+            resolve(response)
+            console.log(response.data)
+            console.log('article supprimé')
+          })
+          .catch((error) => {
+            // commit('setStatus', 'error_publishing')
+            reject(error)
+          })
+      })
+    },
+    // Envoi d'un commentaire
     submitComment: ({ commit }, commentInfos) => {
       return new Promise((resolve, reject) => {
         instance.post('/comment', commentInfos)
@@ -198,6 +240,19 @@ export default createStore({
           })
           .catch((error) => {
             // commit('setStatus', 'error_publishing')
+            reject(error)
+          })
+      })
+    },
+    // Suppression d'un commentaire
+    deleteComment: ({ commit }, commentId) => {
+      return new Promise((resolve, reject) => {
+        instance.delete('/comment/' + commentId)
+          .then((response) => {
+            resolve(response)
+            console.log(response.data)
+          })
+          .catch((error) => {
             reject(error)
           })
       })

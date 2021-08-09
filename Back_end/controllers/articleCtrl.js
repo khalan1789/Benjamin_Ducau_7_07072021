@@ -104,7 +104,7 @@ exports.getOneArticle = async (req, res) => {
             include : [
                 {model : db.User, attributes : ["firstname", "lastname", "profileImageUrl"]},
                 {model : db.Like},
-                {model : db.Comment, attributes: ["contain"], include : [{model : db.User, attributes : ["firstname", "lastname"]}]}
+                {model : db.Comment, attributes: ["contain", "id"], include : [{model : db.User, attributes : ["firstname", "lastname"]}]}
             ]
         })
         .then(article => res.status(200).json({ article }))

@@ -13,10 +13,10 @@
                 <img :src="article.imageUrl" class="card-img-top article-img"  alt="image de l'article" v-if="article.imageUrl">
                 <div class="card-body">
                     <h3 class="card-title border-bottom-primary"> {{ article.title }} </h3>
-                    <p class="h5 card-text">{{ article.title }}</p>
+                    <p class="h5 card-text">{{ article.contain }}</p>
                 </div>
                 <div class="d-flex p-1 mb-3 mt-2">
-                    <button class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
+                    <button @click="likeArticle" class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
                     <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
                 </div>
                 <!-- Zonne commentaires -->
@@ -24,7 +24,7 @@
                     <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded" :data-id="article.Comments.id">
                         <div class="d-flex justify-content-between">
                             <span v-if="comment.User" class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span>
-                            <button class="bg-light " role="delete for admin or author" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
+                            <button class="bg-light " role="delete" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
                         </div>
                             <p class="text-start">{{ comment.contain }}</p>
                     </div>
@@ -57,7 +57,8 @@ export default {
     ...mapState({
       user: 'userInfos',
       article: 'articleInfos',
-      comment: 'commentInfosStatus'
+      comment: 'commentInfosStatus',
+      like: 'likes'
     })
   },
   created () {
@@ -71,25 +72,36 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
+    console.log(this.$store.state.userInfos)
+    console.log(this.$store.state.article)
+    console.log(this.$store.state.articleInfos)
+    console.log(this.$store.state.comments)
   },
   methods: {
-    submitComment () {
+    async submitComment () {
       const contain = this.commentContain
       const articleId = this.article.id
       const userId = this.$store.state.user.userId
       const commentInfos = { contain, articleId, userId }
-      this.$store.dispatch('submitComment', commentInfos)
+      await this.$store.dispatch('submitComment', commentInfos)
       const urlId = articleId
-      this.$store.dispatch('getSelectedArticle', urlId)
+      console.log('urlId : ' + urlId)
+      await this.$store.dispatch('getSelectedArticle', urlId)
       this.commentContain = ''
       window.alert('Commentaire envoyé!')
     },
     deleteComment (commentId) {
-      console.log('id com : ' + commentId)
+      // console.log('id com : ' + commentId)
       this.$store.dispatch('deleteComment', commentId)
       const urlId = this.article.id
-      console.log('via store : ' + this.$store.article.id)
       this.$store.dispatch('getSelectedArticle', urlId)
+      window.alert('Commentaire supprimé!')
+    },
+    likeArticle () {
+      console.log('user id : ' + this.user.id)
+      console.log('article id : ' + this.article.id)
+      console.log('likes ' + this.article.Likes.contain(this.user.id))
+      console.log('likes store: ' + this.$store.state.article.Likes)
     }
   }
 }
