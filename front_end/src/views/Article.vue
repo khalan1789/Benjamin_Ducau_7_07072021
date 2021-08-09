@@ -23,7 +23,7 @@
                 <div >
                     <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded">
                         <div class="d-flex justify-content-between">
-                            <span class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.firstname }} <fa class="mr-2" icon="comment-dots"/> : </span> <button class="bg-light " role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
+                            <span class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span> <button class="bg-light " role="delete for admin" aria-label="delete for admin"><fa icon="trash-alt"/></button>
                         </div>
                             <p class="text-start">{{ comment.contain }}</p>
                     </div>
@@ -48,7 +48,9 @@ export default {
     NavbarMessage
   },
   data () {
-    commentContain: ''
+    return {
+      commentContain: ''
+    }
   },
   computed: {
     ...mapState({
@@ -77,12 +79,17 @@ export default {
       }
     },
     submitComment () {
-      this.$store.dispatch('commentInfos', {
-        contain : this.commentContain,
-        articleId : this.articleId
-      })
+      const contain = this.commentContain
+      const articleId = this.article.id
+      const userId = this.$store.state.user.userId
+      const commentInfos = { contain, articleId, userId }
+      this.$store.dispatch('submitComment', commentInfos)
+      const urlId = articleId
+      this.$store.dispatch('getSelectedArticle', urlId)
+      this.commentContain = ''
+      window.alert('Commentaire envoyé!')
     }
-  },
+  }
 }
 </script>
 

@@ -187,6 +187,20 @@ export default createStore({
         .catch((error) => {
           console.log(error)
         })
+    },
+    submitComment: ({ commit }, commentInfos) => {
+      return new Promise((resolve, reject) => {
+        instance.post('/comment', commentInfos)
+          .then((response) => {
+            // commit('setStatus', 'published')
+            resolve(response)
+            console.log(response.data)
+          })
+          .catch((error) => {
+            // commit('setStatus', 'error_publishing')
+            reject(error)
+          })
+      })
     }
   },
   modules: {
