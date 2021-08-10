@@ -10,13 +10,6 @@ exports.likeArticle = async (req, res) => {
         const rate = req.body.rate
         console.log("id : " + ArticleId + "/ " + UserId + "/ "+ rate + "/ ")
 
-        // if(rate == 1 ){
-        //     await db.Like.create({ UserId, ArticleId })
-        //     .then(()=>  res.status(201).json({ message: "Like ajouté avec succès !" }))
-        //     .catch(error => res.status(500).json({ error : "erreur lors de l'ajout du like"}))
-        // } else {
-        //     console.log("n'a pas pris le cas 1!")
-        // }
         switch (rate){
             case 1 : 
             await db.Like.create({ UserId, ArticleId })
@@ -30,18 +23,28 @@ exports.likeArticle = async (req, res) => {
             .catch(error => res.status(500).json({ error : "erreur lors de la suppression du like"}))
             break;
         }
+        
     } catch (error) {
         return res.status(500).json({ error : "erreur serveur" });
     }
 };
 
 // récupération de tous les likes
-exports.getAllLikes = async (req, res) => {
+exports.controlAllLikes = async (req, res) => {
+    const UserId = req.body.userId
+    const ArticleId = req.body.articleId
+
+    let articleLikedByUser
     try {
-        await db.Like.findAll()
-        .then(likes => res.status(200).json({ likes }))
-        .catch(error => res.status(400).json({ error : "erreur lors de la récupération des likes"}))
+        if(await db.Like.findOne({ where : { UserId, ArticleId } })){
+            articleLikedByUser = true
+            return  res.status(200).json({ articleLikedByUser })
+        }
+        else {
+            articleLikedByUser = false
+            return  res.status(200).json({ articleLikedByUser })
+        }
     } catch (error) {
-        res.status(500).json({ error : "erreur serveur"})
-    }
+            res.status(500).json({ error : "erreur serveur"})
+    }          
 };

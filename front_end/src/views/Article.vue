@@ -7,8 +7,10 @@
                     <div v-if="article.User" class="profile-avatar col-2 col-lg-2 d-flex justify-content-center align-items-center ">
                        <img :src="article.User.profileImageUrl" alt="photo profil de l'éditeur du message" class="avatar" />
                     </div>
+                    <h3 v-if="article.User === null" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > Ancien Utilisateur</h3>
                     <h3 v-if="article.User" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > {{ article.User.firstname}} {{ article.User.lastname}}</h3>
-                    <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article"><fa icon="trash-alt"></fa></button>
+                    <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article" :class="{'invisible' : !rightToDeleteArticle}" @click="onDeleteArticle(article.id)"><fa icon="trash-alt"></fa></button>
+                    <!-- <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article" @click="onDeleteArticle(article.id)"><fa icon="trash-alt"></fa></button> -->
                 </div>
                 <img :src="article.imageUrl" class="card-img-top article-img"  alt="image de l'article" v-if="article.imageUrl">
                 <div class="card-body">
@@ -17,13 +19,14 @@
                 </div>
                 <div class="d-flex p-1 mb-3 mt-2">
                     <button @click="likeArticle" class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
-                    <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
+                    <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ like.length }}</span></span>
                 </div>
                 <!-- Zonne commentaires -->
                 <div >
                     <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded" :data-id="article.Comments.id">
                         <div class="d-flex justify-content-between">
                             <span v-if="comment.User" class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span>
+                            <span v-else-if="comment.User === null" class="fs-6 text-start fst-italic fw-bolder"> Ancien Utilisateur <fa class="mr-2" icon="comment-dots"/> : </span>
                             <button class="bg-light " role="delete" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
                         </div>
                             <p class="text-start">{{ comment.contain }}</p>
@@ -31,7 +34,7 @@
                 </div>
                 <div class="input-group mb-3 p-2">
                     <input v-model="commentContain" class="form-control" placeholder="Ajouter un commentaire" aria-label="zone d'ajout de commentaire"  type="text-area"/>
-                    <button @click="submitComment" class="btn btn-outline-secondary comment-btn">Commenter</button>
+                    <button @click="submitComment" class="btn btn-outline-secondary comment-btn" type="submit" :class="{'disabled' : !validateField}">Commenter</button>
                 </div>
             </div>
         </main>
@@ -59,12 +62,51 @@ export default {
       article: 'articleInfos',
       comment: 'commentInfosStatus',
       like: 'likes'
-    })
+    }),
+    validateField () {
+      if (this.commentContain !== '') {
+        return true
+      } else {
+        return false
+      }
+    },
+    rightToDeleteArticle () {
+      if (this.article.UserId === this.$store.state.user.userId || this.user.isAdmin === true) {
+        return true
+      } else {
+        return false
+      }
+    },
+    rightToDeleteComment () {
+      if (this.comment.UserId === this.$store.state.user.userId || this.user.isAdmin === true) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   created () {
     const urlId = this.$route.params.id
     console.log('id de url : ' + urlId)
     this.$store.dispatch('getSelectedArticle', urlId)
+    // this.$store.dispatch('controlIfLiked', {
+    //   articleId: this.article.id,
+    //   userId: this.user.id
+    // })
+    // console.log('1 : store state userInfos')
+    // console.log(this.$store.state.userInfos)
+    // console.log('2 : store state article')
+    // console.log(this.$store.state.article)
+    // console.log('3 : store state articleInfos')
+    // console.log(this.$store.state.articleInfos)
+    // console.log('4 : store state likes')
+    // console.log(this.$store.state.likes)
+    // console.log('4 : store state comments')
+    // console.log(this.$store.state.comments)
+    // console.log('5 : article id et this user.id')
+    // console.log(this.article.id + '/' + this.user.id)
+    // console.log('6 : article userId + isAdmin')
+    // console.log(this.article.id + '/' + this.user.isAdmin)
   },
   mounted () {
     if (this.$store.state.user.userId === -1) {
@@ -72,10 +114,36 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
+    console.log('1 : store state userInfos')
     console.log(this.$store.state.userInfos)
+    console.log('2 : store state article')
     console.log(this.$store.state.article)
+    console.log('3 : store state articleInfos')
     console.log(this.$store.state.articleInfos)
+    console.log('4 : store state likes')
+    console.log(this.$store.state.likes)
+    console.log('4 : store state comments')
     console.log(this.$store.state.comments)
+    console.log('5 : article id et this user.id')
+    console.log(this.article.id + '/' + this.user.id)
+    console.log('6 : article userId + isAdmin')
+    console.log(this.article.UserId + '/' + this.user.isAdmin)
+    // this.$store.dispatch('controlIfLiked', {
+    //   articleId: this.article.id,
+    //   userId: this.user.id
+    // })
+    // console.log('1 : store state userInfos')
+    // console.log(this.$store.state.userInfos)
+    // console.log('2 : store state article')
+    // console.log(this.$store.state.article)
+    // console.log('3 : store state articleInfos')
+    // console.log(this.$store.state.articleInfos)
+    // console.log('4 : store state comments')
+    // console.log(this.$store.state.comments)
+    // console.log('5 : article id et this user.id')
+    // console.log(this.article.id + '/' + this.user.id)
+    // console.log('6 : article userId + isAdmin')
+    // console.log(this.article.UserId + '/' + this.user.isAdmin)
   },
   methods: {
     async submitComment () {
@@ -143,6 +211,10 @@ export default {
       })
       const urlId = this.article.id
       this.$store.dispatch('getSelectedArticle', urlId)
+    },
+    async onDeleteArticle (articleId) {
+      await this.$store.dispatch('onDeleteArticle', articleId)
+      this.$router.push('/')
     }
   }
 }

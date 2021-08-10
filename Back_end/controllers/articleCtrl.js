@@ -83,7 +83,7 @@ exports.getAllArticles = async (req, res) => {
             attributes : ["id", "title", "contain", "imageUrl", "createdAt", "UserId"],
             order : [ ["createdAt", "DESC"] ],
             include : [
-                {model : db.User, attributes : ["firstname", "lastname"]},
+                {model : db.User, attributes : ["firstname", "lastname", "id"]},
                 {model : db.Like, attributes : ["id"]},
         ]
         })
@@ -102,9 +102,9 @@ exports.getOneArticle = async (req, res) => {
             attributes : ["id", "title", "contain", "imageUrl", "createdAt", "UserId"],
             where : { id },
             include : [
-                {model : db.User, attributes : ["firstname", "lastname", "profileImageUrl"]},
+                {model : db.User, attributes : ["firstname", "lastname", "profileImageUrl", "id"]},
                 {model : db.Like, attributes : ["id", "UserId", "ArticleId"]},
-                {model : db.Comment, attributes: ["contain", "id"], include : [{model : db.User, attributes : ["firstname", "lastname"]}]}
+                {model : db.Comment, attributes: ["contain", "id", "UserId"], include : [{model : db.User, attributes : ["firstname", "lastname", "id"]}]}
             ]
         })
         .then(article => res.status(200).json({ article }))

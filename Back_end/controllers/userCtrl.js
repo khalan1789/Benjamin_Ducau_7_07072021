@@ -106,7 +106,7 @@ exports.getOneUser = async (req, res) => {
       // db.User.findByPk(id)
       await db.User.findOne({
           where : { id }, 
-         attributes : ["id", "lastname", "firstname", "email", "profileImageUrl"]
+         attributes : ["id", "lastname", "firstname", "email", "profileImageUrl", "isAdmin"]
       })
           .then(user => {
             res.status(200).json({user
