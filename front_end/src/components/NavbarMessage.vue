@@ -14,7 +14,7 @@
                     <router-link class="nav-link text-white nav-btn-hover" to="/profile">Mon profil</router-link>
                 </li>
                 <li class="nav-item ml-3">
-                    <a href="#" @click="logout()" class="nav-link text-white nav-btn-hover ">Se déconnecter</a>
+                    <a href="#" @click="logout()" class="nav-link text-white  ">Se déconnecter</a>
                 </li>
             </ul>
         </div>

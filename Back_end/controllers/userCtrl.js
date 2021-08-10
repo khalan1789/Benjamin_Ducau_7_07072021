@@ -168,9 +168,9 @@ exports.addProfilePhoto = async (req, res) => {
 // obtention de tous les utilisateurs pour l'admin
 exports.getAllUsers = async (req, res) => {
   try{
-    await db.User.findAll()
+    await db.User.findAll({ attributes : [ "id", "firstname", "lastname", "isAdmin", "email"] })
       .then( users => {
-        res.status(200).json( users )
+        res.status(200).json({users})
       })
       .catch((error) => res.status(400).json({ error }))
   } catch {
