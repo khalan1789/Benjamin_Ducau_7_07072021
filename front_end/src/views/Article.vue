@@ -12,8 +12,8 @@
                 </div>
                 <img :src="article.imageUrl" class="card-img-top article-img"  alt="image de l'article" v-if="article.imageUrl">
                 <div class="card-body">
-                    <h3 class="card-title border-bottom-primary"> {{ article.title }} </h3>
-                    <p class="h5 card-text">{{ article.contain }}</p>
+                    <h3 class="card-title border-bottom-primary mt-2 mb-1"> {{ article.title }} </h3>
+                    <p class="fs-4  mt-3 card-text">{{ article.contain }}</p>
                 </div>
                 <div class="d-flex p-1 mb-3 mt-2">
                     <button @click="likeArticle" class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
@@ -97,11 +97,52 @@ export default {
       this.$store.dispatch('getSelectedArticle', urlId)
       window.alert('Commentaire supprimé!')
     },
-    likeArticle () {
+    async likeArticle () {
       console.log('user id : ' + this.user.id)
       console.log('article id : ' + this.article.id)
-      console.log('likes ' + this.article.Likes.contain(this.user.id))
-      console.log('likes store: ' + this.$store.state.article.Likes)
+      console.log(this.like)
+      console.log('likes : ')
+      console.log(this.article.Likes)
+      let rate
+      let likeId
+      if (this.article.Likes.length === 0) {
+        console.log('voyons le user id')
+        console.log(this.user.id)
+        rate = 1
+        console.log('rate : ' + rate)
+        // return rate
+      } else {
+        this.article.Likes.forEach(like => {
+          if (like.UserId === this.user.id) {
+            console.log('voyons le user id')
+            console.log(this.user.id)
+            console.log(like.UserId)
+            console.log('a priori il le trouvate')
+            rate = 0
+            likeId = like.id
+            console.log('rate : ' + rate)
+            // return rate
+          } else {
+            console.log('voyons le user id')
+            console.log(this.user.id)
+            console.log(like.UserId)
+            console.log('non trouvé')
+            rate = 1
+            likeId = like.id
+            console.log('rate : ' + rate)
+            // return rate
+          }
+        })
+      }
+      console.log('rate après vérif : ' + rate)
+      await this.$store.dispatch('onLikeArticle', {
+        userId: this.user.id,
+        articleId: this.article.id,
+        rate: rate,
+        likeId
+      })
+      const urlId = this.article.id
+      this.$store.dispatch('getSelectedArticle', urlId)
     }
   }
 }
@@ -110,6 +151,7 @@ export default {
 <style lang="scss" scoped>
 .page-vue{
   height: 100%;
+  min-height: 100vh;
   width: 100vw;
   background-image: linear-gradient(to bottom right,#ffd7d7,rgb(224, 155, 215));
 }

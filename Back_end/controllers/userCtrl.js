@@ -103,8 +103,11 @@ exports.getOneUser = async (req, res) => {
       const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
       const id = decodedToken.userId
     
-      db.User.findByPk(id)
-    // await db.User.findOne({ where : { id }})
+      // db.User.findByPk(id)
+      await db.User.findOne({
+          where : { id }, 
+         attributes : ["id", "lastname", "firstname", "email", "profileImageUrl"]
+      })
           .then(user => {
             res.status(200).json({user
             })
@@ -162,7 +165,7 @@ exports.addProfilePhoto = async (req, res) => {
   }
 };
 
-// obtention de tous les utilisateurs
+// obtention de tous les utilisateurs pour l'admin
 exports.getAllUsers = async (req, res) => {
   try{
     await db.User.findAll()

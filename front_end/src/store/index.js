@@ -256,6 +256,18 @@ export default createStore({
             reject(error)
           })
       })
+    },
+    onLikeArticle: ({ commit }, likeInfos) => {
+      return new Promise((resolve, reject) => {
+        instance.post('/like/', likeInfos)
+          .then((response) => {
+            resolve(response)
+            console.log(response.data)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     }
   },
   modules: {

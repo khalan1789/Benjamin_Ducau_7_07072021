@@ -4,7 +4,7 @@ const db = require("../models");
 // ajout/annulation d'un like
 exports.likeArticle = async (req, res) => {
     try {
-        const id = req.body.id
+        const id = req.body.likeId
         const UserId = req.body.userId
         const ArticleId = req.body.articleId
         const rate = req.body.rate
@@ -27,7 +27,7 @@ exports.likeArticle = async (req, res) => {
             case 0 : 
             await db.Like.destroy({ where : { id }})
             .then(()=>  res.status(201).json({ message: "Like supprimé !" }))
-            .catch(error => res.status(500).json({ error : "erreur lors de la création de l'article"}))
+            .catch(error => res.status(500).json({ error : "erreur lors de la suppression du like"}))
             break;
         }
     } catch (error) {
