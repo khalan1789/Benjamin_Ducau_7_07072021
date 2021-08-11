@@ -39,6 +39,13 @@ export default createStore({
       profileImageUrl: '',
       isAdmin: ''
     },
+    usersInfos: {
+      id: '',
+      firstname: '',
+      lastname: '',
+      email: '',
+      isAdmin: ''
+    },
     article: {
       id: '',
       contain: '',
@@ -46,16 +53,13 @@ export default createStore({
       imageUrl: ''
     },
     articleInfos: {
-      articleId: '',
+      id: '',
       contain: '',
       title: '',
       imageUrl: '',
-      articleUserId: '',
-      Likes: {
-        id: '',
-        ArticleId: '',
-        UserId: ''
-      }
+      UserId: '',
+      firstname: '',
+      lastname: ''
     },
     comments: {
       id: '',
@@ -92,7 +96,7 @@ export default createStore({
     articleStatus: function (state, article) {
       state.article = article
     },
-    articleInfos: function (state, articleInfos) {
+    articleInfosStatus: function (state, articleInfos) {
       state.articleInfos = articleInfos
     },
     commentsInfos: function (state, comments) {
@@ -100,6 +104,9 @@ export default createStore({
     },
     likesInfos: function (state, likes) {
       state.likes = likes
+    },
+    usersInfosStatus: function (state, usersInfos) {
+      state.usersInfos = usersInfos
     }
   },
   actions: {
@@ -180,14 +187,15 @@ export default createStore({
       instance.get('/article')
         .then(response => {
           commit('articleStatus', response.data.articles)
-          console.log(response.data)
+          console.log('res status')
+          console.log(response.status)
         })
         .catch((error) => {
           console.log(error)
         })
     },
     // Publication d'un article
-    publishArticle: ({ commit, state }, formData) => {
+    publishArticle: ({ commit }, formData) => {
       return new Promise((resolve, reject) => {
         instance.post('/article', formData)
           .then((response) => {
@@ -201,17 +209,31 @@ export default createStore({
       })
     },
     // Accès à l'article sélectionné
-    getSelectedArticle: ({ commit, state }, urlId) => {
-      instance.get('/article/' + urlId)
-        .then(response => {
-          commit('articleInfos', response.data.article)
-          commit('commentsInfos', response.data.article.Comments)
-          commit('likesInfos', response.data.article.Likes)
-          console.log('likesInfos', response.data.article.Likes)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    getSelectedArticle: ({ commit }, urlId) => {
+      return new Promise((resolve, reject) => {
+        instance.get('/article/' + urlId)
+          .then(response => {
+            console.log('index data reponse')
+            console.log(response.data)
+            console.log('index response data article')
+            console.log(response.data.article)
+            console.log('index response les likes')
+            console.log(response.data.article.Likes)
+            console.log('index response les comment')
+            console.log(response.data.article.Comments)
+            // commit('articleInfos', response.data.article)
+            commit('commentsInfos', response.data.article.Comments)
+            commit('likesInfos', response.data.article.Likes)
+            console.log('likesInfos', response.data.article.Likes)
+            commit('articleInfosStatus', response.data.article)
+            resolve(response)
+            // console.log('articleInfos', this.articleInfos)
+          })
+          .catch((error) => {
+            console.log(error)
+            reject(error)
+          })
+      })
     },
     // Suppression de l'article
     onDeleteArticle: ({ commit }, articleId) => {
@@ -257,6 +279,7 @@ export default createStore({
           })
       })
     },
+    // Clic au like
     onLikeArticle: ({ commit }, likeInfos) => {
       return new Promise((resolve, reject) => {
         instance.post('/like/', likeInfos)
@@ -268,7 +291,27 @@ export default createStore({
             reject(error)
           })
       })
+    },
+    // Récupération des utilisateurs pour l'admin
+    getAllUsers: ({ commit }) => {
+      instance.get('auth/admin/users')
+        .then((response) => {
+          commit('usersInfosStatus', response.data.users)
+          console.log(response.data.users)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
+    // controlIfLiked: ({ commit }, infos) => {
+    //     instance.get('/like', infos)
+    //       .then((response) => {
+    //         console.log(response.data)
+    //       })
+    //       .catch((error) => {
+    //         console.log(error)
+    //       })
+    // }
   },
   modules: {
   }

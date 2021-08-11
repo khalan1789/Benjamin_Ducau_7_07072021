@@ -17,7 +17,12 @@ router.put("/profile/:id",auth, multer, userCtrl.addProfilePhoto );
 
 router.delete("/profile/:id",auth, userCtrl.deleteUser)
 
+// Routes partie admin
+
 router.get("/admin/users", userCtrl.getAllUsers)
 
+router.delete("/admin/delete", userCtrl.deleteUserByAdmin)
+
+// router.put("/admin/", userCtrl.)
 
 module.exports = router;

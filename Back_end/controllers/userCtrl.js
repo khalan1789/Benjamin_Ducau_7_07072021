@@ -178,3 +178,19 @@ exports.getAllUsers = async (req, res) => {
       message : "erreur de récupération des utilisateurs" })
   }
 };
+
+exports.deleteUserByAdmin = async (req, res) => {
+  try{
+    id = req.body.userToDelete
+    await db.User.destroy({ where: { id } })
+    .then(() => {
+      res.status(200).json({
+        message: "suppression de l'utilisateur effectuée "
+      })
+    })
+    .catch((error) => res.status(401).json({ error }))
+  } catch {
+    res.status(402).json({
+      message : "erreur de suppression de l'utilisateur" })
+  }
+};

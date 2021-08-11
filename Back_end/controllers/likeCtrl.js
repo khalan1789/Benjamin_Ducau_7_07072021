@@ -13,7 +13,7 @@ exports.likeArticle = async (req, res) => {
         switch (rate){
             case 1 : 
             await db.Like.create({ UserId, ArticleId })
-            .then(()=>  res.status(201).json({ message: "Like ajouté avec succès !" }))
+            .then((like)=>  res.status(201).json({ like, message: "Like ajouté avec succès !" }))
             .catch(error => res.status(500).json({ error : "erreur lors de l'ajout du like"}))
             break;
 

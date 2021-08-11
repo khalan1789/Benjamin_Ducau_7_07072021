@@ -10,7 +10,6 @@
                     <h3 v-if="article.User === null" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > Ancien Utilisateur</h3>
                     <h3 v-if="article.User" class="mt-2 text-start fw-bolder p-1 text-white fst-italic col-7 col-lg-8" > {{ article.User.firstname}} {{ article.User.lastname}}</h3>
                     <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article" :class="{'invisible' : !rightToDeleteArticle}" @click="onDeleteArticle(article.id)"><fa icon="trash-alt"></fa></button>
-                    <!-- <button class="btn bg-light col-3 col-lg-2" aria-label="logo de suppression pour l'admin ou l'éditeur de l'article" @click="onDeleteArticle(article.id)"><fa icon="trash-alt"></fa></button> -->
                 </div>
                 <img :src="article.imageUrl" class="card-img-top article-img"  alt="image de l'article" v-if="article.imageUrl">
                 <div class="card-body">
@@ -19,15 +18,15 @@
                 </div>
                 <div class="d-flex p-1 mb-3 mt-2">
                     <button @click="likeArticle" class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
-                    <span class="w-50 bg-secondary"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ like.length }}</span></span>
+                    <span class="w-50 " :class="{'bg-success' :  liked === true, 'bg-secondary' : liked === false}"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="likes" class="align-text-top text-white">{{ likes.length }}</span></span>
                 </div>
                 <!-- Zonne commentaires -->
                 <div >
-                    <div v-for="comment of article.Comments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded" :data-id="article.Comments.id">
+                    <div v-for="comment of articleComments" :key="comment.id" class="w-30 p-1 m-2 d-flex flex-column border border-secondary bg-primary bg-radient rounded" :data-id="articleComments.id">
                         <div class="d-flex justify-content-between">
                             <span v-if="comment.User" class="fs-6 text-start fst-italic fw-bolder"> {{ comment.User.firstname }} {{ comment.User.lastname }} <fa class="mr-2" icon="comment-dots"/> : </span>
                             <span v-else-if="comment.User === null" class="fs-6 text-start fst-italic fw-bolder"> Ancien Utilisateur <fa class="mr-2" icon="comment-dots"/> : </span>
-                            <button class="bg-light " role="delete" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
+                            <button v-if="rightToDeleteComment (comment.UserId)" class="bg-light " role="delete" aria-label="bouton de suppression du commentaire pour l'admin ou l'autheur du commentaire" @click="deleteComment( comment.id )" ><fa icon="trash-alt"/></button>
                         </div>
                             <p class="text-start">{{ comment.contain }}</p>
                     </div>
@@ -53,15 +52,17 @@ export default {
   },
   data () {
     return {
-      commentContain: ''
+      commentContain: '',
+      liked: 'bg-success',
+      notLiked: 'bg-secondary'
     }
   },
   computed: {
     ...mapState({
       user: 'userInfos',
       article: 'articleInfos',
-      comment: 'commentInfosStatus',
-      like: 'likes'
+      articleComments: 'comments',
+      likes: 'likes'
     }),
     validateField () {
       if (this.commentContain !== '') {
@@ -76,74 +77,55 @@ export default {
       } else {
         return false
       }
-    },
-    rightToDeleteComment () {
-      if (this.comment.UserId === this.$store.state.user.userId || this.user.isAdmin === true) {
-        return true
-      } else {
-        return false
-      }
     }
   },
   created () {
-    const urlId = this.$route.params.id
-    console.log('id de url : ' + urlId)
-    this.$store.dispatch('getSelectedArticle', urlId)
+    // const urlId = this.$route.params.id
+    // console.log('id de url : ' + urlId)
+    this.$store.dispatch('getSelectedArticle', this.$route.params.id)
+      .then(() => {
+        // this.$store.dispatch('getSelectedArticle', urlId)
+        console.log('1 created : store state userInfos')
+        console.log(this.$store.state.userInfos)
+        console.log('2 created : store state article')
+        console.log(this.$store.state.article)
+        console.log('3 created : store state articleInfos')
+        console.log(this.$store.state.articleInfos)
+        console.log('4 created : store state likes')
+        console.log(this.$store.state.likes)
+        console.log('4 bis created: store state comments')
+        console.log(this.$store.state.comments)
+        console.log('5 created: article id et this user.id')
+        console.log(this.article.id + '/' + this.user.id)
+        console.log('6 created: article userId + isAdmin')
+        console.log(this.article.UserId + '/' + this.user.isAdmin)
+        this.alreadyLiked(this.$store.state.likes)
+      })
     // this.$store.dispatch('controlIfLiked', {
     //   articleId: this.article.id,
     //   userId: this.user.id
     // })
-    // console.log('1 : store state userInfos')
-    // console.log(this.$store.state.userInfos)
-    // console.log('2 : store state article')
-    // console.log(this.$store.state.article)
-    // console.log('3 : store state articleInfos')
-    // console.log(this.$store.state.articleInfos)
-    // console.log('4 : store state likes')
-    // console.log(this.$store.state.likes)
-    // console.log('4 : store state comments')
-    // console.log(this.$store.state.comments)
-    // console.log('5 : article id et this user.id')
-    // console.log(this.article.id + '/' + this.user.id)
-    // console.log('6 : article userId + isAdmin')
-    // console.log(this.article.id + '/' + this.user.isAdmin)
   },
   mounted () {
     if (this.$store.state.user.userId === -1) {
       this.$router.push('login')
       return
     }
-    this.$store.dispatch('getUserInfos')
-    console.log('1 : store state userInfos')
+    console.log('1 mounted : store state userInfos')
     console.log(this.$store.state.userInfos)
-    console.log('2 : store state article')
+    console.log('2 mounted : store state article')
     console.log(this.$store.state.article)
-    console.log('3 : store state articleInfos')
+    console.log('3 mounted : store state articleInfos')
     console.log(this.$store.state.articleInfos)
-    console.log('4 : store state likes')
+    console.log('4 mounted : store state likes')
     console.log(this.$store.state.likes)
-    console.log('4 : store state comments')
+    console.log('4 mounted : store state comments')
     console.log(this.$store.state.comments)
-    console.log('5 : article id et this user.id')
-    console.log(this.article.id + '/' + this.user.id)
-    console.log('6 : article userId + isAdmin')
+    console.log('5 mounted : comment userid et this user.id')
+    console.log(this.articleComments.user + '/' + this.user.id)
+    console.log('6 mounted : article userId + isAdmin')
     console.log(this.article.UserId + '/' + this.user.isAdmin)
-    // this.$store.dispatch('controlIfLiked', {
-    //   articleId: this.article.id,
-    //   userId: this.user.id
-    // })
-    // console.log('1 : store state userInfos')
-    // console.log(this.$store.state.userInfos)
-    // console.log('2 : store state article')
-    // console.log(this.$store.state.article)
-    // console.log('3 : store state articleInfos')
-    // console.log(this.$store.state.articleInfos)
-    // console.log('4 : store state comments')
-    // console.log(this.$store.state.comments)
-    // console.log('5 : article id et this user.id')
-    // console.log(this.article.id + '/' + this.user.id)
-    // console.log('6 : article userId + isAdmin')
-    // console.log(this.article.UserId + '/' + this.user.isAdmin)
+    // this.alreadyLiked(this.$store.state.likes)
   },
   methods: {
     async submitComment () {
@@ -170,20 +152,23 @@ export default {
       console.log('article id : ' + this.article.id)
       console.log(this.like)
       console.log('likes : ')
+      console.log(this.likes)
+      console.log('this.article.Likes')
       console.log(this.article.Likes)
       let rate
       let likeId
-      if (this.article.Likes.length === 0) {
+      if (this.likes.length === 0) {
         console.log('voyons le user id')
         console.log(this.user.id)
         rate = 1
         console.log('rate : ' + rate)
         // return rate
       } else {
-        this.article.Likes.forEach(like => {
+        this.likes.forEach(like => {
           if (like.UserId === this.user.id) {
             console.log('voyons le user id')
             console.log(this.user.id)
+            console.log('like UserId : ')
             console.log(like.UserId)
             console.log('a priori il le trouvate')
             rate = 0
@@ -193,6 +178,7 @@ export default {
           } else {
             console.log('voyons le user id')
             console.log(this.user.id)
+            console.log('like UserId : ')
             console.log(like.UserId)
             console.log('non trouvé')
             rate = 1
@@ -215,6 +201,26 @@ export default {
     async onDeleteArticle (articleId) {
       await this.$store.dispatch('onDeleteArticle', articleId)
       this.$router.push('/')
+    },
+    rightToDeleteComment (commentUserId) {
+      if (commentUserId === this.$store.state.user.userId || this.user.isAdmin === true) {
+        return true
+      } else {
+        return false
+      }
+    },
+    alreadyLiked (likes) {
+      let liked
+      if (likes.length === 0) {
+        return liked === false
+      }
+      likes.forEach(like => {
+        if (like.UserId === this.$store.state.user.userId) {
+          return liked === true
+        } else {
+          return liked === false
+        }
+      })
     }
   }
 }

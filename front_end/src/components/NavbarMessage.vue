@@ -27,8 +27,8 @@ export default ({
   name: 'NavbarMessage',
   methods: {
     logout: function () {
+      this.$router.push('/login')
       this.$store.commit('logout')
-      this.$router.push('login')
     }
   }
 })
