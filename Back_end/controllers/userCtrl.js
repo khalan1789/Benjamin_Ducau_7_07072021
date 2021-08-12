@@ -132,7 +132,7 @@ exports.deleteUser = async (req, res) => {
         message: "suppression du compte effectuée "
       })
     })
-    .catch((error) => res.status(401).json({ error }))
+    .catch((error) => res.status(400).json({ error : "erreur lors de la suppression de l'utilisateur" }))
   }
   catch (error) {
     res.status(400).json({ error })
@@ -182,15 +182,35 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUserByAdmin = async (req, res) => {
   try{
     id = req.body.userToDelete
+    console.log("req id")
+    console.log(req.body.userToDelete)
     await db.User.destroy({ where: { id } })
     .then(() => {
       res.status(200).json({
         message: "suppression de l'utilisateur effectuée "
       })
     })
-    .catch((error) => res.status(401).json({ error }))
+    .catch((error) => res.status(400).json({ error : "erreur lors de la suppression de l'utilisateur"}))
   } catch {
-    res.status(402).json({
-      message : "erreur de suppression de l'utilisateur" })
+    res.status(500).json({
+      error : "erreur lors de la tentative de connexion au serveur" })
+  }
+};
+
+exports.giveAdminGrant = async (req, res) => {
+  try{
+    id = req.body.userToDelete
+    console.log("req id")
+    console.log(req.body.userToDelete)
+    await db.User.update({ isAdmin : true }, { where: { id } })
+    .then(() => {
+      res.status(200).json({
+        message: "ajout du privilège admin à l'utilisateur effectuée "
+      })
+    })
+    .catch((error) => res.status(400).json({ error : "erreur lors de l'ajout du privilège"}))
+  } catch {
+    res.status(500).json({
+      error : "erreur lors de la tentative de connexion au serveur" })
   }
 };

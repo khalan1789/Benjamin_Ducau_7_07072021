@@ -19,10 +19,10 @@ router.delete("/profile/:id",auth, userCtrl.deleteUser)
 
 // Routes partie admin
 
-router.get("/admin/users", userCtrl.getAllUsers)
+router.get("/admin/users", auth, userCtrl.getAllUsers)
 
-router.delete("/admin/delete", userCtrl.deleteUserByAdmin)
+router.post("/admin/delete", auth, userCtrl.deleteUserByAdmin)
 
-// router.put("/admin/", userCtrl.)
+router.put("/admin/", auth, userCtrl.giveAdminGrant)
 
 module.exports = router;
