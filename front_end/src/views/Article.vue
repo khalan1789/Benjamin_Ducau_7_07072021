@@ -1,6 +1,6 @@
 <template>
     <div class="page-vue">
-        <NavbarMessage/>
+        <NavbarArticle/>
         <main class="container d-flex flex-column justify-content-center col-lg-7 ">
             <div class="card mt-3 mb-3 shadow-lg border-secondary">
                 <div class="d-flex justify-content-between bg-secondary bg-gradient">
@@ -18,7 +18,8 @@
                 </div>
                 <div class="d-flex p-1 mb-3 mt-2">
                     <button @click="likeArticle" class="btn btn-outline-secondary w-50 " aria-label="add a like button" style="height:30px"><fa class="align-top" icon="thumbs-up"/></button>
-                    <span class="w-50 " :class="{'bg-success' :  liked === true, 'bg-secondary' : liked === false}"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="likes" class="align-text-top text-white">{{ likes.length }}</span></span>
+                    <span v-if="alreadyLiked ()" class="w-50 bg-success"><fa class="align-middle text-white " style="width:30px" icon="heart"/><span class="align-text-top text-white">{{ likes.length }}</span></span>
+                    <span v-else class="w-50 bg-secondary"><fa class="align-middle text-white " style="width:30px" icon="heart"/><span class="align-text-top text-white">{{ likes.length }}</span></span>
                 </div>
                 <!-- Zonne commentaires -->
                 <div >
@@ -42,13 +43,13 @@
 
 <script>
 // @ is an alias to /src
-import NavbarMessage from '@/components/NavbarMessage.vue'
+import NavbarArticle from '@/components/NavbarArticle.vue'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Message',
   components: {
-    NavbarMessage
+    NavbarArticle
   },
   data () {
     return {
@@ -99,7 +100,9 @@ export default {
         console.log(this.article.id + '/' + this.user.id)
         console.log('6 created: article userId + isAdmin')
         console.log(this.article.UserId + '/' + this.user.isAdmin)
-        this.alreadyLiked(this.$store.state.likes)
+        // this.alreadyLiked(this.$store.state.likes)
+        // console.log('** this store alreadyliked')
+        // console.log(this.alreadyLiked(this.$store.state.likes))
       })
     // this.$store.dispatch('controlIfLiked', {
     //   articleId: this.article.id,
@@ -109,22 +112,22 @@ export default {
   mounted () {
     if (this.$store.state.user.userId === -1) {
       this.$router.push('login')
-      return
+      // return
     }
-    console.log('1 mounted : store state userInfos')
-    console.log(this.$store.state.userInfos)
-    console.log('2 mounted : store state article')
-    console.log(this.$store.state.article)
-    console.log('3 mounted : store state articleInfos')
-    console.log(this.$store.state.articleInfos)
-    console.log('4 mounted : store state likes')
-    console.log(this.$store.state.likes)
-    console.log('4 mounted : store state comments')
-    console.log(this.$store.state.comments)
-    console.log('5 mounted : comment userid et this user.id')
-    console.log(this.articleComments.user + '/' + this.user.id)
-    console.log('6 mounted : article userId + isAdmin')
-    console.log(this.article.UserId + '/' + this.user.isAdmin)
+    // console.log('1 mounted : store state userInfos')
+    // console.log(this.$store.state.userInfos)
+    // console.log('2 mounted : store state article')
+    // console.log(this.$store.state.article)
+    // console.log('3 mounted : store state articleInfos')
+    // console.log(this.$store.state.articleInfos)
+    // console.log('4 mounted : store state likes')
+    // console.log(this.$store.state.likes)
+    // console.log('4 mounted : store state comments')
+    // console.log(this.$store.state.comments)
+    // console.log('5 mounted : comment userid et this user.id')
+    // console.log(this.articleComments.user + '/' + this.user.id)
+    // console.log('6 mounted : article userId + isAdmin')
+    // console.log(this.article.UserId + '/' + this.user.isAdmin)
     // this.alreadyLiked(this.$store.state.likes)
   },
   methods: {
@@ -200,6 +203,7 @@ export default {
     },
     async onDeleteArticle (articleId) {
       await this.$store.dispatch('onDeleteArticle', articleId)
+      alert('l\'article est supprimé !')
       this.$router.push('/')
     },
     rightToDeleteComment (commentUserId) {
@@ -209,18 +213,21 @@ export default {
         return false
       }
     },
-    alreadyLiked (likes) {
-      let liked
-      if (likes.length === 0) {
-        return liked === false
+    alreadyLiked () {
+      if (this.article.Likes.length === 0) {
+        console.log('already length = 0')
+        return false
+      } else {
+        this.article.Likes.forEach(like => {
+          if (like.UserId === this.user.id) {
+            console.log('boucle for each true : matché')
+            return true
+          } else {
+            console.log('boucle for each false')
+            return false
+          }
+        })
       }
-      likes.forEach(like => {
-        if (like.UserId === this.$store.state.user.userId) {
-          return liked === true
-        } else {
-          return liked === false
-        }
-      })
     }
   }
 }

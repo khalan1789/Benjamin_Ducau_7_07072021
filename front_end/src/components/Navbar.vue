@@ -7,7 +7,10 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end " id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item mr-3">
+                    <li v-if="user.isAdmin === true" class="nav-item mr-3">
+                        <router-link class="nav-link text-white nav-btn-hover" to="/admin">Gestion administrateur</router-link>
+                    </li>
+                    <li class="nav-item mr-3 ml-3">
                         <router-link class="nav-link text-white nav-btn-hover" to="/profile">Mon profil</router-link>
                     </li>
                     <li class="nav-item ml-3">
@@ -20,6 +23,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default ({
   name: 'Navbar',
   methods: {
@@ -27,6 +31,11 @@ export default ({
       this.$router.push('login')
       this.$store.commit('logout')
     }
+  },
+  computed: {
+    ...mapState({
+      user: 'userInfos'
+    })
   }
 })
 </script>

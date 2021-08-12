@@ -142,9 +142,6 @@ exports.deleteUser = async (req, res) => {
 // modification de la photo de profil d'un utilisateur
 exports.addProfilePhoto = async (req, res) => {
   try{
-      // console.log("test du path url");
-      // console.log(req.file)
-      // console.log(req.body);
       const token = req.headers.authorization.split(' ')[1];
       const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
       const id = decodedToken.userId

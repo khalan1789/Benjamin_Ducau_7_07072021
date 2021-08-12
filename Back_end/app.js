@@ -1,15 +1,23 @@
-//REQUIRED
+// REQUIRED
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser")
 const path = require("path")
 
-//ROUTES
+// ROUTES
 
 const userRoute = require("./routes/userRoute");
 const articleRoute = require("./routes/articleRoute");
 const commentRoute = require("./routes/commentRoute");
 const likeRoute = require("./routes/likeRoute");
+
+// SECURITY MODULES
+
+const helmet = require("helmet")
+const dotenv = require("dotenv").config();
+
+// sécurisation des entêtes HTTP
+app.use(helmet());
 
 app.use(express.json());
 

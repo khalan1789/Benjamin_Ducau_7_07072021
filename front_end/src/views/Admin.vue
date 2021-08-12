@@ -33,6 +33,16 @@ export default {
   //   },
   created () {
     this.$store.dispatch('getAllUsers')
+    console.log('1 created : store state userInfos')
+    console.log(this.$store.state.userInfos)
+    console.log('2 created : store state article')
+    console.log(this.$store.state.article)
+    console.log('3 created : store state articleInfos')
+    console.log(this.$store.state.articleInfos)
+    console.log('4 created : store state likes')
+    console.log(this.$store.state.likes)
+    console.log('5 created : store state comments')
+    console.log(this.$store.state.usersInfos)
   },
   computed: {
     ...mapState({
@@ -55,6 +65,18 @@ export default {
       })
         .then(() => { this.$store.dispatch('getAllUsers') })
     }
+  },
+  mounted () {
+    console.log('1 mounted : store state userInfos')
+    console.log(this.$store.state.userInfos)
+    console.log('2 mounted : store state article')
+    console.log(this.$store.state.article)
+    console.log('3 mounted : store state articleInfos')
+    console.log(this.$store.state.articleInfos)
+    console.log('4 mounted : store state likes')
+    console.log(this.$store.state.likes)
+    console.log('5 mounted : store state comments')
+    console.log(this.$store.state.usersInfos)
   }
 }
 </script>
