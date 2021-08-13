@@ -4,14 +4,15 @@
             <div class="photo-group border-secondary bg-primary">
                 <p class=""><img class="bg-info img-profile mt-4" :src="user.profileImageUrl" alt="photo de profil"/></p>
                 <div class="d-flex flex-column align-items-center">
-                    <input type="file" @change="onFileSelected" ref="changeImageInput" class="invisible" name="image" accept=".jpg, .jpeg, .png" />
+                    <input type="file" @change="onFileSelected" ref="changeImageInput" class="invisible" id="profileImage" name="image" accept=".jpg, .jpeg, .png" />
+                    <label class="invisible" aria-label="zone de chargement photo" for="profileImage">Changer ma photo</label>
                     <button @click="$refs.changeImageInput.click()" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Changer ma photo</button>
                     <button @click="uploadImg" class="btn btn-sm bg-light border-secondary mb-md-4 mb-3 col-6 col-md-5">Valider</button>
                 </div>
             </div>
             <div class="info-group bg-primary text-center">
                 <h2 class="text-secondary text-break mt-3 mb-4">{{ user.firstname }} {{user.lastname }}</h2>
-                <h5 class="text-break mt-3 mb-4">{{user.email }}</h5>
+                <h3 class="h3 text-break mt-3 mb-4">{{user.email }}</h3>
                 <button @click="backToMainMenu ()" class="btn w-50 border-primary mt-5 align-self-center bg-light border-secondary">Retour à l'accueil</button>
                 <div class="info-button-group mt-3 d-flex flex-column w-50 align-self-center">
                     <button @click="logout()" class="btn mt-3 mb-4 bg-light border-secondary">Déconnexion</button>

@@ -46,6 +46,7 @@
         </div>
         <div v-else v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
+            <h5 class="  text-start text-white fst-italic" v-if="article.User === null ">Posté par Ancien Utilisateur</h5>
             <h5 class="  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }}</h5>
             <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
             </div>
@@ -92,6 +93,15 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
+    // console.log('1 mounted : store state userInfos')
+    // console.log(this.$store.state.userInfos)
+    // console.log('2 mounted : store state article')
+    // console.log(this.$store.state.article)
+    // console.log('3 mounted : store state articleInfos')
+    // console.log(this.$store.state.articleInfos)
+    // console.log('4 mounted : store state likes')
+    // console.log(this.$store.state.likes)
+    // console.log('4 mounted : store state comments')
   },
   methods: {
     onFileSelected (event) {
@@ -110,7 +120,7 @@ export default {
       formData.append('title', this.articleTitle)
       formData.append('contain', this.articleContain)
       formData.append('userId', this.$store.state.user.userId)
-      confirm('Vous êtes sur le point de publier un article, êtes-vous sûr(e) ?')
+      alert('article publié !')
       e.preventDefault()
       await this.$store.dispatch('publishArticle', formData)
         .then(() => {
@@ -136,6 +146,7 @@ export default {
     },
     async onDeleteArticle (articleId) {
       await this.$store.dispatch('onDeleteArticle', articleId)
+      alert('article supprimé !')
       this.downloadArticles()
     }
   },
