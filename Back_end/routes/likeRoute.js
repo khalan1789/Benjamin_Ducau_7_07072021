@@ -10,6 +10,6 @@ const auth = require("../middlewares/Auth")
 router.post("/like", auth, likeCtrl.likeArticle);
 
 // récupération de tous les likes
-router.get("/like", auth, likeCtrl.controlAllLikes)
+router.post("/like/isliked", auth, likeCtrl.controlAllLikes)
 
 module.exports = router;

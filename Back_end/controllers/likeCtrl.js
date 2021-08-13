@@ -38,11 +38,11 @@ exports.controlAllLikes = async (req, res) => {
     try {
         if(await db.Like.findOne({ where : { UserId, ArticleId } })){
             articleLikedByUser = true
-            return  res.status(200).json({ articleLikedByUser })
+            return  res.status(200).json({ articleLikedByUser, message : "déjà liké" })
         }
         else {
             articleLikedByUser = false
-            return  res.status(200).json({ articleLikedByUser })
+            return  res.status(200).json({ articleLikedByUser, message : "non liké" })
         }
     } catch (error) {
             res.status(500).json({ error : "erreur serveur"})

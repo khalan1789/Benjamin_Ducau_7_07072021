@@ -71,7 +71,8 @@ export default createStore({
       id: '',
       ArticleId: '',
       UserId: ''
-    }
+    },
+    isLiked: ''
   },
   mutations: {
     setStatus: function (state, status) {
@@ -107,9 +108,13 @@ export default createStore({
     },
     usersInfosStatus: function (state, usersInfos) {
       state.usersInfos = usersInfos
+    },
+    isLikedInfo: function (state, isLiked) {
+      state.isLiked = isLiked
     }
   },
   actions: {
+    // *** partie utilisateur ***
     login: ({ commit }, userInfos) => {
       commit('setStatus', 'loading')
       return new Promise((resolve, reject) => {
@@ -182,6 +187,7 @@ export default createStore({
           })
       })
     },
+    // *** partie articles ***
     // Récupération de tous les articles
     getAllArticles: ({ commit }) => {
       instance.get('/article')
@@ -251,6 +257,7 @@ export default createStore({
           })
       })
     },
+    // *** partie commentaires ***
     // Envoi d'un commentaire
     submitComment: ({ commit }, commentInfos) => {
       return new Promise((resolve, reject) => {
@@ -279,6 +286,7 @@ export default createStore({
           })
       })
     },
+    // *** gestion des likes ***
     // Clic au like
     onLikeArticle: ({ commit }, likeInfos) => {
       return new Promise((resolve, reject) => {
@@ -292,6 +300,21 @@ export default createStore({
           })
       })
     },
+    controlIfLiked: ({ commit }, infos) => {
+      return new Promise((resolve, reject) => {
+        instance.post('/like/isliked', infos)
+          .then((response) => {
+            console.log(response.data.articleLikedByUser)
+            commit('isLikedInfo', response.data.articleLikedByUser)
+            resolve(response)
+          })
+          .catch((error) => {
+            console.log(error)
+            resolve(error)
+          })
+      })
+    },
+    //  ***  Partie administrateur ***
     // Récupération des utilisateurs pour l'admin
     getAllUsers: ({ commit }) => {
       instance.get('auth/admin/users')
@@ -302,16 +325,32 @@ export default createStore({
         .catch((error) => {
           console.log(error)
         })
+    },
+    adminDeleteUser: ({ commit }, userToDelete) => {
+      return new Promise((resolve, reject) => {
+        instance.post('/auth/admin/delete/', userToDelete)
+          .then((response) => {
+            resolve(response)
+            console.log(response.data)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    adminGiveGrantAdmin: ({ commit }, userId) => {
+      return new Promise((resolve, reject) => {
+        instance.put('/auth/admin/', userId)
+          .then((response) => {
+            resolve(response)
+            console.log('retour rep data suite promise')
+            console.log(response.data)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     }
-    // controlIfLiked: ({ commit }, infos) => {
-    //     instance.get('/like', infos)
-    //       .then((response) => {
-    //         console.log(response.data)
-    //       })
-    //       .catch((error) => {
-    //         console.log(error)
-    //       })
-    // }
   },
   modules: {
   }

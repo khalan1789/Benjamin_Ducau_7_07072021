@@ -110,6 +110,6 @@ exports.getOneArticle = async (req, res) => {
         .then(article => res.status(200).json({ article }))
         .catch(error => res.status(400).json({ error : "erreur lors de la récupération de l'article"}))
     } catch (error) {
-        res.status(500).json({ error : "erreur lors de la récupération de l'article"})
+        res.status(500).json({ error : "erreur serveur lors de la récupération de l'article"})
     }
 };
