@@ -82,59 +82,15 @@ export default {
     }
   },
   created () {
-    // const urlId = this.$route.params.id
-    // console.log('id de url : ' + urlId)
     this.$store.dispatch('getSelectedArticle', this.$route.params.id)
       .then(() => {
-        // this.$store.dispatch('getSelectedArticle', urlId)
-        // this.$store.dispatch('controlIfLiked', {
-        //   userId: this.user.id,
-        //   articleId: this.article.id
-        // })
         this.controlIsLiked()
-        console.log('1 created : store state userInfos')
-        console.log(this.$store.state.userInfos)
-        console.log('2 created : store state article')
-        // console.log(this.$store.state.article)
-        // console.log('3 created : store state articleInfos')
-        console.log(this.$store.state.articleInfos)
-        console.log('4 created : store state likes')
-        console.log(this.$store.state.likes)
-        // console.log('4 bis created: store state comments')
-        // console.log(this.$store.state.comments)
-        console.log('5 created: article id et this user.id')
-        console.log(this.article.id + '/' + this.user.id)
-        // console.log('6 created: article userId + isAdmin')
-        // console.log(this.article.UserId + '/' + this.user.isAdmin)
-        // alreadyLiked()
-        console.log('** this store alreadyliked')
-        console.log(this.isLiked)
       })
-    // this.$store.dispatch('controlIfLiked', {
-    //   articleId: this.article.id,
-    //   userId: this.user.id
-    // })
   },
   mounted () {
     if (this.$store.state.user.userId === -1) {
       this.$router.push('login')
-      return
     }
-    // console.log('1 mounted : store state userInfos')
-    // console.log(this.$store.state.userInfos)
-    // console.log('2 mounted : store state article')
-    // console.log(this.$store.state.article)
-    console.log('3 mounted : store state articleInfos')
-    console.log(this.$store.state.articleInfos)
-    console.log('4 mounted : store state likes')
-    console.log(this.$store.state.likes)
-    // console.log('4 mounted : store state comments')
-    // console.log(this.$store.state.comments)
-    // console.log('5 mounted : comment userid et this user.id')
-    // console.log(this.articleComments.user + '/' + this.user.id)
-    // console.log('6 mounted : article userId + isAdmin')
-    // console.log(this.article.UserId + '/' + this.user.isAdmin)
-    // this.alreadyLiked(this.$store.state.likes)
   },
   methods: {
     async submitComment () {
@@ -144,59 +100,32 @@ export default {
       const commentInfos = { contain, articleId, userId }
       await this.$store.dispatch('submitComment', commentInfos)
       const urlId = articleId
-      console.log('urlId : ' + urlId)
       await this.$store.dispatch('getSelectedArticle', urlId)
       this.commentContain = ''
       window.alert('Commentaire envoyé!')
     },
     deleteComment (commentId) {
-      // console.log('id com : ' + commentId)
       this.$store.dispatch('deleteComment', commentId)
       const urlId = this.article.id
       this.$store.dispatch('getSelectedArticle', urlId)
       window.alert('Commentaire supprimé!')
     },
     async likeArticle () {
-      console.log('user id : ' + this.user.id)
-      console.log('article id : ' + this.article.id)
-      console.log('likes : ')
-      console.log(this.likes)
-      console.log('this.article.Likes')
-      console.log(this.article.Likes)
       let rate
       let likeId
       if (this.likes.length === 0) {
-        console.log('voyons le user id')
-        console.log(this.user.id)
         rate = 1
-        console.log('rate : ' + rate)
-        // return rate
       } else {
         this.likes.forEach(like => {
           if (like.UserId === this.user.id) {
-            console.log('voyons le user id')
-            console.log(this.user.id)
-            console.log('like UserId : ')
-            console.log(like.UserId)
-            console.log('a priori il le trouvate')
             rate = 0
             likeId = like.id
-            console.log('rate : ' + rate)
-            // return rate
           } else {
-            console.log('voyons le user id')
-            console.log(this.user.id)
-            console.log('like UserId : ')
-            console.log(like.UserId)
-            console.log('non trouvé')
             rate = 1
             likeId = like.id
-            console.log('rate : ' + rate)
-            // return rate
           }
         })
       }
-      console.log('rate après vérif : ' + rate)
       await this.$store.dispatch('onLikeArticle', {
         userId: this.user.id,
         articleId: this.article.id,
@@ -225,22 +154,6 @@ export default {
         articleId: this.article.id
       })
     }
-    // alreadyLiked () {
-    //   if (this.$store.state.likes.length < 1) {
-    //     console.log('already length = 0')
-    //     return false
-    //   } else {
-    //     this.$store.state.likes.forEach(like => {
-    //       if (like.UserId === this.$store.state.user.id) {
-    //         console.log('boucle for each true : matché')
-    //         return true
-    //       } else {
-    //         console.log('boucle for each false')
-    //         return false
-    //       }
-    //     })
-    //   }
-    // }
   }
 }
 </script>

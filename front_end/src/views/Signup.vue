@@ -28,7 +28,7 @@
                     <button type="submit" v-else @click="createAccount" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-3 mb-3" :class="{'disabled' : !validateFields}">Valider l'inscription</button>
                 </form>
                 <div>
-                    <h5 class="mt-3 mb-2">Déjà un compte ?</h5>
+                    <h3 class="h5 mt-3 mb-2">Déjà un compte ?</h3>
                     <button class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" ><router-link class="text-secondary bg-light text-decoration-none" to="/login">Se connecter</router-link></button>
                 </div>
             </div>

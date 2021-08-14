@@ -20,7 +20,7 @@
                     <button v-else type="submit" @click="loginUser" class="btn btn-lg btn-outline-secondary text-secondary bg-light mt-4 mb-3" :class="{'disabled' : !validateFields}">Se connecter</button>
                 </form>
                 <div>
-                    <h5 class="mt-3 mb-2">Pas encore inscrit ?</h5>
+                    <h3 class=" h5 mt-3 mb-2">Pas encore inscrit ?</h3>
                     <button type="submit" class="btn btn-md btn-outline-secondary text-secondary bg-light mt-1 mb-3" ><router-link class="text-secondary bg-light text-decoration-none" to="/signup">S'inscrire</router-link></button>
                 </div>
             </div>

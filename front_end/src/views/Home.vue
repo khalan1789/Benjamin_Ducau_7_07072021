@@ -46,8 +46,8 @@
         </div>
         <div v-else v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
-            <h5 class="  text-start text-white fst-italic" v-if="article.User === null ">Posté par Ancien Utilisateur</h5>
-            <h5 class="  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }}</h5>
+            <h3 class="h5  text-start text-white fst-italic" v-if="article.User === null ">Posté par Ancien Utilisateur</h3>
+            <h3 class="h5  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }}</h3>
             <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
             </div>
             <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté" v-if="article.imageUrl">
@@ -93,22 +93,12 @@ export default {
       return
     }
     this.$store.dispatch('getUserInfos')
-    // console.log('1 mounted : store state userInfos')
-    // console.log(this.$store.state.userInfos)
-    // console.log('2 mounted : store state article')
-    // console.log(this.$store.state.article)
-    // console.log('3 mounted : store state articleInfos')
-    // console.log(this.$store.state.articleInfos)
-    // console.log('4 mounted : store state likes')
-    // console.log(this.$store.state.likes)
-    // console.log('4 mounted : store state comments')
   },
   methods: {
     onFileSelected (event) {
       this.selectedFile = event.target.files[0]
     },
     async publishArticle (e) {
-      e.preventDefault()
       if (this.articleContain === '' && !this.selectedFile) {
         return console.log('erreur au moins un des champs est requis : contenu ou image')
       }
@@ -121,7 +111,6 @@ export default {
       formData.append('contain', this.articleContain)
       formData.append('userId', this.$store.state.user.userId)
       alert('article publié !')
-      e.preventDefault()
       await this.$store.dispatch('publishArticle', formData)
         .then(() => {
           this.$store.dispatch('getAllArticles')

@@ -1,5 +1,5 @@
 <template>
-    <main class="bg-light">
+    <main class="">
         <div class="profile-card">
             <div class="photo-group border-secondary bg-primary">
                 <p class=""><img class="bg-info img-profile mt-4" :src="user.profileImageUrl" alt="photo de profil"/></p>
@@ -12,7 +12,8 @@
             </div>
             <div class="info-group bg-primary text-center">
                 <h2 class="text-secondary text-break mt-3 mb-4">{{ user.firstname }} {{user.lastname }}</h2>
-                <h3 class="h3 text-break mt-3 mb-4">{{user.email }}</h3>
+                <h3 class="h4 text-break mt-3 mb-4">{{user.email }}</h3>
+                <span v-if="user.isAdmin === true"><fa icon="user-shield"/> Vous êtes admin</span>
                 <button @click="backToMainMenu ()" class="btn w-50 border-primary mt-5 align-self-center bg-light border-secondary">Retour à l'accueil</button>
                 <div class="info-button-group mt-3 d-flex flex-column w-50 align-self-center">
                     <button @click="logout()" class="btn mt-3 mb-4 bg-light border-secondary">Déconnexion</button>
@@ -25,7 +26,6 @@
 
 <script>
 import { mapState } from 'vuex'
-// import axios from 'axios'
 
 export default {
   name: 'Profile',
@@ -72,7 +72,6 @@ export default {
     deleteAccount: function () {
       this.logout()
       this.$store.dispatch('deleteAccount')
-      // this.logout()
     }
   }
 }
@@ -82,6 +81,7 @@ export default {
 .img-profile{
   max-width: 350px;
   max-height: 300px;
+  object-fit: contain;
   @media (max-width: 500px) {
     width: 200px
   }
@@ -94,7 +94,25 @@ main {
   justify-content: center;
   align-items: center;
   width: 100%;
-
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  height: 100%;
+  margin:0;
+  padding:0;
+  background-size: 100% ;
+   &:before{
+     content: "";
+        position: fixed;
+        height: 100%; width: 100%;
+        background: url("../logos/icon-left-font-monochrome-white.png") ;
+        background-size: contain;
+        z-index: -1;
+        filter: blur(5px);
+        -webkit-background-size: contain; /* pour Chrome et Safari */
+        -moz-background-size: contain; /* pour Firefox */
+        -o-background-size: contain; /* pour Opera */
+        background-color: #2c3e50;
+   }
 }
 .profile-card{
   width: 90vw;
@@ -108,8 +126,12 @@ main {
 }
 
 .photo-group{
+  margin-top: 150px;
   width: 100%;
   min-height: 300px;
+  @media (min-width: 930px){
+    margin-top: 0px;
+  }
 }
 
 .info-group{

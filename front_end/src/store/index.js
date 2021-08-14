@@ -1,4 +1,7 @@
 import { createStore } from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import SecureLS from 'secure-ls'
+const ls = new SecureLS({ isCompression: false })
 
 const axios = require('axios').default
 
@@ -74,6 +77,15 @@ export default createStore({
     },
     isLiked: ''
   },
+  plugins: [
+    createPersistedState({
+      storage: {
+        getItem: key => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: key => ls.remove(key)
+      }
+    })
+  ],
   mutations: {
     setStatus: function (state, status) {
       state.status = status
@@ -126,7 +138,6 @@ export default createStore({
           })
           .catch((error) => {
             commit('setStatus', 'error_to_login')
-            console.log(error)
             reject(error)
           })
       })
@@ -152,7 +163,7 @@ export default createStore({
           commit('userInfos', response.data.user)
         })
         .catch((error) => {
-          console.log(error)
+          throw error
         })
     },
     // Suppression du compte de l'utilisateur connecté
@@ -171,17 +182,13 @@ export default createStore({
     },
     // Changement de l'image de profil de l'utilisateur connecté
     uploadProfileImage: ({ commit, state }, formData) => {
-      console.log(formData)
       return new Promise((resolve, reject) => {
         instance.put('http://localhost:3000/api/auth/profile/' + state.user.userId, formData)
           .then((response) => {
-            // commit('userInfos')
             commit('setStatus', 'uploaded')
-            console.log('resp du serv' + response)
             resolve(response)
           })
           .catch((error) => {
-            console.log(error)
             commit('setStatus', 'error_upload')
             reject(error)
           })
@@ -193,11 +200,9 @@ export default createStore({
       instance.get('/article')
         .then(response => {
           commit('articleStatus', response.data.articles)
-          console.log('res status')
-          console.log(response.status)
         })
         .catch((error) => {
-          console.log(error)
+          throw error
         })
     },
     // Publication d'un article
@@ -219,24 +224,12 @@ export default createStore({
       return new Promise((resolve, reject) => {
         instance.get('/article/' + urlId)
           .then(response => {
-            console.log('index data reponse')
-            console.log(response.data)
-            console.log('index response data article')
-            console.log(response.data.article)
-            console.log('index response les likes')
-            console.log(response.data.article.Likes)
-            console.log('index response les comment')
-            console.log(response.data.article.Comments)
-            // commit('articleInfos', response.data.article)
             commit('commentsInfos', response.data.article.Comments)
             commit('likesInfos', response.data.article.Likes)
-            console.log('likesInfos', response.data.article.Likes)
             commit('articleInfosStatus', response.data.article)
             resolve(response)
-            // console.log('articleInfos', this.articleInfos)
           })
           .catch((error) => {
-            console.log(error)
             reject(error)
           })
       })
@@ -246,13 +239,9 @@ export default createStore({
       return new Promise((resolve, reject) => {
         instance.delete('/article/' + articleId)
           .then((response) => {
-            // commit('setStatus', 'published')
             resolve(response)
-            console.log(response.data)
-            console.log('article supprimé')
           })
           .catch((error) => {
-            // commit('setStatus', 'error_publishing')
             reject(error)
           })
       })
@@ -263,12 +252,9 @@ export default createStore({
       return new Promise((resolve, reject) => {
         instance.post('/comment', commentInfos)
           .then((response) => {
-            // commit('setStatus', 'published')
             resolve(response)
-            console.log(response.data)
           })
           .catch((error) => {
-            // commit('setStatus', 'error_publishing')
             reject(error)
           })
       })
@@ -279,7 +265,6 @@ export default createStore({
         instance.delete('/comment/' + commentId)
           .then((response) => {
             resolve(response)
-            console.log(response.data)
           })
           .catch((error) => {
             reject(error)
@@ -293,7 +278,6 @@ export default createStore({
         instance.post('/like/', likeInfos)
           .then((response) => {
             resolve(response)
-            console.log(response.data)
           })
           .catch((error) => {
             reject(error)
@@ -304,12 +288,10 @@ export default createStore({
       return new Promise((resolve, reject) => {
         instance.post('/like/isliked', infos)
           .then((response) => {
-            console.log(response.data.articleLikedByUser)
             commit('isLikedInfo', response.data.articleLikedByUser)
             resolve(response)
           })
           .catch((error) => {
-            console.log(error)
             resolve(error)
           })
       })
@@ -320,7 +302,6 @@ export default createStore({
       instance.get('auth/admin/users')
         .then((response) => {
           commit('usersInfosStatus', response.data.users)
-          console.log(response.data.users)
         })
         .catch((error) => {
           console.log(error)
@@ -331,7 +312,6 @@ export default createStore({
         instance.post('/auth/admin/delete/', userToDelete)
           .then((response) => {
             resolve(response)
-            console.log(response.data)
           })
           .catch((error) => {
             reject(error)
@@ -343,15 +323,11 @@ export default createStore({
         instance.put('/auth/admin/', userId)
           .then((response) => {
             resolve(response)
-            console.log('retour rep data suite promise')
-            console.log(response.data)
           })
           .catch((error) => {
             reject(error)
           })
       })
     }
-  },
-  modules: {
   }
 })
