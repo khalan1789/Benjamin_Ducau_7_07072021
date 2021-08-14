@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize"); 
 
+// modèle sequelize pour la table User et associations
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User',{
         firstname:{

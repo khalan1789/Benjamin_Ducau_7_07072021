@@ -1,3 +1,4 @@
+// modèle sequelize pour la table Article et associations
 const { DataTypes } = require("sequelize"); 
 
 module.exports = (sequelize, DataTypes) => {

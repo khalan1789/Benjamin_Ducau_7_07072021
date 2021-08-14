@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize"); 
 
+// modèle sequelize pour la table Comment et associations
 module.exports = (sequelize, DataTypes) => {
     const Comment = sequelize.define('Comment',{
         contain:{

@@ -1,3 +1,4 @@
+// Multer pour les images de profil utilisateur
 const multer = require("multer");
 
 const MIMES_TYPES = {

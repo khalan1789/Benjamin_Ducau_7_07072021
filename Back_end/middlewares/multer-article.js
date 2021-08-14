@@ -1,3 +1,4 @@
+// multer pour les images des articles
 const multer = require("multer");
 
 const MIMES_TYPES = {
