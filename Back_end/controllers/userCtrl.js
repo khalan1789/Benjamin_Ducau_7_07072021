@@ -2,6 +2,9 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv");
+
+const newToken = "$2b$10$fJDZ1iSIogwxpkQ/dAY38.N33KQPEIBwTmBO0HcjXPJ"
 
 // création d'un utilisateur
 exports.signup = async (req, res) => {
@@ -61,6 +64,7 @@ exports.login = async (req, res) => {
       const regExpMail = /^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,8}$/;
       const validEmail = regExpMail.test(email);
 
+
       if(!email || !password || !validEmail){
         return res.status(400).json({ error: "Tous les champs doivent être correctement renseignés !" });
       }
@@ -80,11 +84,12 @@ exports.login = async (req, res) => {
                             userId : user.id,
                             token : jwt.sign(      
                                 {userId : user.id, isAdmin : user.isAdmin},
-                                'RANDOM_TOKEN_SECRET',
+                                newToken,
+                                // 'RANDOM_TOKEN_SECRET',                               
                                 {expiresIn : '12h'}
                             ),
                         })
-                        // console.log("id après : " + id)
+                        // console.log("token : " + )
                     })
                     .catch(error => res.status(500).json({ error : "erreur de cryptage token" }))
       })
