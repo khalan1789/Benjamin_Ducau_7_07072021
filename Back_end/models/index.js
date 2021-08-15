@@ -1,13 +1,25 @@
 'use strict';
 
 // configuration sequelize
+require("dotenv").config()
 
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+
+//si fichier config.json est bien dans gitignore :
+// const config = require(__dirname + '/../config/config.json')[env];
+//Sinon mettre la const config comme suit :
+const config = {
+  username: process.env.dbUsername,
+  password: process.env.dbPassword,
+  database: process.env.dbDatabase,
+  host: process.env.dbHost,
+  dialect: "mysql",
+  port: process.env.dbPort
+}
 const db = {};
 
 let sequelize;

@@ -2,7 +2,8 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config()
+const secretToken = process.env.secretToken
 
 // création d'un utilisateur
 exports.signup = async (req, res) => {
@@ -76,7 +77,7 @@ exports.login = async (req, res) => {
                             userId : user.id,
                             token : jwt.sign(      
                                 {userId : user.id, isAdmin : user.isAdmin},
-                                'RANDOM_TOKEN_SECRET',                               
+                                secretToken,                               
                                 {expiresIn : '12h'}
                             ),
                         })
@@ -94,7 +95,7 @@ exports.login = async (req, res) => {
 exports.getOneUser = async (req, res) => {
   try{
       const token = req.headers.authorization.split(' ')[1];
-      const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+      const decodedToken = jwt.verify(token, secretToken);
       const id = decodedToken.userId
     
       await db.User.findOne({
@@ -116,7 +117,7 @@ exports.getOneUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try{
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const decodedToken = jwt.verify(token, secretToken);
     const id = decodedToken.userId
 
     await db.User.destroy({ where: { id } })
@@ -136,7 +137,7 @@ exports.deleteUser = async (req, res) => {
 exports.addProfilePhoto = async (req, res) => {
   try{
       const token = req.headers.authorization.split(' ')[1];
-      const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+      const decodedToken = jwt.verify(token, secretToken);
       const id = decodedToken.userId
       console.log("user id : " + id )
       const profileImageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
