@@ -9,7 +9,8 @@
             <div class="card-body d-flex flex-column justify-content-between" :id="user.id">
                 <h5 class="card-title"> {{ user.firstname }} {{ user.lastname }} </h5>
                 <h6 class="card-subtitle mb-2 text-muted"> {{ user.email }} </h6>
-                <p> Est admin : {{ user.isAdmin }}</p>
+                <p v-if="user.isAdmin === true"> Est admin : OUI</p>
+                <p v-else> Est admin : NON</p>
                 <div class="d-flex justify-content-between flex-column contain-btns">
                 <button @click="onDeleteUser (user.id)" class="btn btn-sm bg-info text-dark mr-3 border border-secondary">Supprimer l'utilisateur</button>
                 <button @click="giveAdminGrant (user.id)" class="btn btn-sm ml-1 bg-warning border border-secondary ">Donner les droits ADMIN</button>

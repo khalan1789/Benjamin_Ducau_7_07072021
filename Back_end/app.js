@@ -13,11 +13,22 @@ const likeRoute = require("./routes/likeRoute");
 
 // SECURITY MODULES
 
-const helmet = require("helmet")
+const helmet = require("helmet");
 const dotenv = require("dotenv").config();
+const cookieSession = require("cookie-session");
 
 // sécurisation des entêtes HTTP
 app.use(helmet());
+
+//mise en place des cookies en http only
+app.use(cookieSession({
+  secret: "sessionS3cur3",
+  cookie : {
+    secure : true,
+    httpOnly : true,
+    domain : "http://localhost:3000"
+  }
+}))
 
 app.use(express.json());
 

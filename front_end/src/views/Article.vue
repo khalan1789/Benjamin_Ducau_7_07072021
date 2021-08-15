@@ -184,6 +184,7 @@ export default {
 .avatar{
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 .article-img{
   object-fit: contain;
