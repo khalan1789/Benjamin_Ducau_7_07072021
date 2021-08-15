@@ -47,7 +47,7 @@
         <div v-else v-for="article in articles" :key="article.id" class="card mt-2 mb-3 shadow-lg border-secondary messagePosted" :id="article.id">
             <div class="d-flex justify-content-between bg-secondary bg-gradient p-1">
             <h3 class="h5  text-start text-white fst-italic" v-if="article.User === null ">Posté par Ancien Utilisateur</h3>
-            <h3 class="h5  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }}</h3>
+            <h3 class="h5  text-start text-white fst-italic" v-if="article.User">Posté par {{ nameAuthor(article.User.firstname, article.User.lastname) }} le {{ onlyDate(article.createdAt) }}</h3>
             <span class="text-end"><fa class="align-middle text-white" style="width:30px" icon="heart"/><span v-if="article.Likes" class="align-text-top text-white">{{ article.Likes.length }}</span></span>
             </div>
             <img :src="article.imageUrl" class="card-img-top article-img"  alt="photo de l'article posté" v-if="article.imageUrl">
@@ -140,6 +140,10 @@ export default {
       await this.$store.dispatch('onDeleteArticle', articleId)
       alert('article supprimé !')
       this.downloadArticles()
+    },
+    onlyDate (createdAt) {
+      const date = createdAt.split('T')[0]
+      return date.split('-').reverse().join('-')
     }
   },
   computed: {
