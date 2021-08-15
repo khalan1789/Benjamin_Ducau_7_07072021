@@ -30,7 +30,7 @@
                             </div>
                             <div class="d-flex flex-column-reverse flex-md-row justify-content-md-between">
                                 <button @click="cancelFields" class="btn btn-rounded mt-3 mt-md-2 mb-3 pl-3">Annuler</button>
-                                <button @click="publishArticle" class="btn btn-lg bg-secondary bg-gradient text-light mt-3 mt-md-2 mb-2 mr-3" type="submit" :class="{'disabled' : !validateFields}" >Poster cet article</button>
+                                <button @click="publishArticle" class="btn btn-lg bg-secondary bg-gradient text-light mt-3 mt-md-2 mb-2 mr-3" type="button" :class="{'disabled' : !validateFields}" >Poster cet article</button>
                             </div>
                         </form>
                     </div>
@@ -114,6 +114,9 @@ export default {
       await this.$store.dispatch('publishArticle', formData)
         .then(() => {
           this.$store.dispatch('getAllArticles')
+          this.articleTitle = ''
+          this.articleContain = ''
+          this.selectedFile = ''
         })
         .catch(error => {
           console.log(error)
